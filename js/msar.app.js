@@ -4,10 +4,12 @@
     const save_btn = document.getElementById('save');
     const delete_btn = document.getElementById('delete');
     const storage_key = "__msar_note_app";
+    const no_internet_prrefix = "__msar_note_sync_";
     const baseUrl = "seton/moc.oiesaberif.em-rasm//:sptth";
     const syncUrl = baseUrl.split('').reverse().join('');
     var urlParams = new URLSearchParams(window.location.search);
     var onlineSyncData = "";
+    var can_notify = true;
     //setup before functions
     var typingTimer;                //timer identifier
     var doneTypingInterval = 5000;  //time in ms, 5 second for example
@@ -52,12 +54,13 @@
             var returned = prompt("Here is your note link:", window.location.href);
         }
     }
-    if( urlParams.has('note') ){
+    if( urlParams.has('note') && isConnected() ){
         loadOnlineData(urlParams.get('note'), function(response){
             if( response !== null ){
                 onlineSyncData = response;
-                editor.value = response;
-                saveData(response);
+                var valid_response = checkResponse(response);
+                editor.value = valid_response;
+                saveData(valid_response);
                 toggleDeleteBtn(true);
                 resize();
             }else{
@@ -71,6 +74,10 @@
         }
     }else{
         loadSavedData();
+    }
+
+    function isConnected(){
+        return window.navigator.onLine;
     }
     
     function toggleDeleteBtn(show = true){
@@ -106,11 +113,41 @@
         return id;
     }
 
+    function checkResponse(response){
+        var backup_text = getBackupData();
+        if( backup_text.length > response.length && backup_text.length !== response.length ){
+            if( confirm("You have a old note, do you want to load this?") ){
+                deleteBackup(urlParams.get('note'));
+                return backup_text;
+            }
+        }
+
+        return response;
+    }
+
     function loadSavedData(){
-        var text = getSavedData();
+        var text = checkResponse(getSavedData());
         editor.value = text;
         resize();
     }
+
+    function saveDataWhenConnectionLost(text, name){
+        if( name===null ){name = "backup";}
+        return localStorage.setItem(no_internet_prrefix+name, text);
+    }
+    function getBackupData(){
+        var name = "backup";
+        if( urlParams.has('note') ){
+            name = urlParams.get('note');
+        }
+        var data = localStorage.getItem(no_internet_prrefix+name) || "";
+        return data;
+    }
+    function deleteBackup(name){
+        if( name===null ){name = "backup";}
+        return localStorage.removeItem(no_internet_prrefix+name);
+    }
+
     function syncDataOnKeyUp(text){
         if( urlParams.has('note') ){
             updateDataToOnline(text, urlParams.get('note'), 
@@ -126,6 +163,7 @@
         }, doneTypingInterval);
         return localStorage.setItem(storage_key, text);
     }
+
     function getRandomNumber(min, max) {
         return Math.floor(Math.random() * (max - min + 1) ) + min;
     }
@@ -152,6 +190,18 @@
     function updateDataToOnline(text, id, callback){
         if( onlineSyncData === text ){ return true; }
         if( isReadOnly() ){ return true; }
+        if( ! isConnected() ){ 
+            if( can_notify ){
+                alert("No internet connection is available now."); 
+                saveDataWhenConnectionLost(text, id);
+                can_notify = false;
+            }
+            setTimeout(function(){
+                can_notify = true;
+            }, 60 * 1000);
+
+            return false;
+        }
         animateSaveButton(true);
         var data = serializeData(text, id);
         fetch(syncUrl+".json", {
@@ -166,6 +216,10 @@
             if( typeof(callback)==='function' ){
                 return callback(myJson, data);
             }
+        }).catch(function(err){
+            console.log(err);
+            console.log("Failed to sync data...");
+            saveDataWhenConnectionLost(text, id);
         });
     }
 
