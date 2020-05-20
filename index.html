@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="shortcut icon" href="./favicon.ico" />
+    <link rel="manifest" href="./manifest.json">
 	<title>Note</title>
 	<link rel="stylesheet" href="./css/app.css" type="text/css" media="screen">
 
@@ -59,6 +60,19 @@
 			</div>
 		</main>
 	</div>
-	<script src="./js/msar.app.js"></script>
+    <script type="text/javascript">
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('sw.js', { scope: './' }).then(function(registration) {
+                    // Registration was successful
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                }, function(err) {
+                    // registration failed :(
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+    </script>
+    <script src="./js/app.js"></script>
 </body>
 </html>
