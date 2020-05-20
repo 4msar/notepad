@@ -3,7 +3,7 @@
     const editor_container = document.getElementById('editor-container');
     const save_btn = document.getElementById('save');
     const delete_btn = document.getElementById('delete');
-    const storage_key = "__msar_note_app";
+    const storage_key = "__msar_note_app__";
     const no_internet_prrefix = "__msar_note_sync_";
     const baseUrl = "seton/moc.oiesaberif.em-rasm//:sptth";
     const syncUrl = baseUrl.split('').reverse().join('');
@@ -47,6 +47,7 @@
                         window.history.pushState('', "Note", returned);
                         urlParams = new URLSearchParams(window.location.search);
                         toggleDeleteBtn(true);
+                        saveData(text);
                     }
                 }
         });
@@ -102,7 +103,11 @@
     }
 
     function getSavedData(){
-        var data = localStorage.getItem(storage_key) || "";
+        var getByName = storage_key;
+        if( urlParams.has('note') ){
+            getByName = storage_key+urlParams.get('note');
+        }
+        var data = localStorage.getItem(getByName) || "";
         return data;
     }
 
@@ -161,7 +166,12 @@
         typingTimer = setTimeout(function(){
             syncDataOnKeyUp(text)
         }, doneTypingInterval);
-        return localStorage.setItem(storage_key, text);
+        var saveByName = storage_key;
+        if( urlParams.has('note') ){
+            saveByName = storage_key+urlParams.get('note');
+        }
+
+        return localStorage.setItem(saveByName, text);
     }
 
     function getRandomNumber(min, max) {
@@ -234,7 +244,8 @@
         }).then(res => {
             return res.json()
         }).then(jsn=>{
-            console.log(jsn)
+            return localStorage.removeItem(storage_key+id);
+            console.log(jsn);
         });
     }
 
