@@ -5,3 +5,5 @@ function UnSaveNotice(){
         </div>
     )
 }
+
+export default UnSaveNotice;
