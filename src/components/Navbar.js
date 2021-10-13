@@ -31,7 +31,7 @@ export default function Navbar({ onSave, onDelete }) {
 		<header className="navbar">
 			<div className="wrapper">
 				<h1 className="name">
-					<Link to="/">Note</Link>
+					<Link title="Simple Note Taking Application..." to="/">Noto</Link>
 				</h1>
 				<div className="actions">
 					<strong

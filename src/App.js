@@ -1,14 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Home from "./pages/Home";
 import NewNote from "./pages/NewNote";
 import Note from "./pages/Note";
-import * as serviceWorker from "./serviceWorkerRegistration";
 
 function App() {
-	useEffect(() => {
-		serviceWorker.register();
-	}, []);
+	
 	return (
 		<Router>
 			<Switch>

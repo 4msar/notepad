@@ -165,4 +165,13 @@ main {
 	.paper textarea {
 		-webkit-overflow-scrolling: touch;
 	}
+	.__snackbar_container {
+		align-items: center !important;
+		left: 0 !important;
+		right: 0 !important;
+		width: 100% !important;
+	}
+	.__snackbar_container .snack {
+		width: 300px !important;
+	}
 }
