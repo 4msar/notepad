@@ -30,6 +30,10 @@ a {
 	align-items: center;
 }
 
+.loading {
+	padding: 100px 50px;
+}
+
 header {
 	color: #eee;
 	background: #1f1f1f;
@@ -52,7 +56,7 @@ header .name {
 	display: flex;
 }
 .action-btn {
-	color: yellow;
+	color: #fff;
 	border: 1px solid;
 	font-size: 15px;
 	padding: 1px 6px;
@@ -61,25 +65,35 @@ header .name {
 	transition: 0.4s;
 	margin-right: 10px;
 }
+#save {
+	border-color: #4ca746;
+}
 #save:hover {
-	background-color: green;
+	background-color: #4ca746;
 	color: #fff;
 }
 #delete {
-	color: red;
+	color: #dc3545;
 	margin: 0;
 }
 #delete:hover {
-	background-color: red;
+	background-color: #dc3545;
 	color: #fff;
 }
 #new {
-	color: white;
-	border-color: white;
+	border-color: #157af6;
 }
 #new:hover {
-	background-color: greenyellow;
-	color: #333;
+	background-color: #157af6;
+	color: #fff;
+}
+#open {
+	color: #9acd32;
+	border-color: #9acd32;
+}
+#open:hover {
+	background-color: #9acd32;
+	color: #fff;
 }
 
 .paper {

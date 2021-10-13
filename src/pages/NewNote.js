@@ -11,7 +11,11 @@ export default function NewNote() {
 
 	const onSave = () => {
 		const noteId = syncNote();
-		history.push(`/n/${noteId}`);
+		const url = new URL(`${window.location.origin}/n/${noteId}`);
+		const returned = prompt("Here is your note link:\n", url.toString());
+		if (returned) {
+			history.push(`/n/${noteId}`);
+		}
 	};
 
 	const inputChange = (event) => {

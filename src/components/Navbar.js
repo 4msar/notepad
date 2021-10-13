@@ -1,9 +1,27 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useParams, useHistory } from "react-router-dom";
+import { generateNoteId, isEmpty } from "../utils/functions";
 
 export default function Navbar({ onSave, onDelete }) {
 	const history = useHistory();
 	const { note } = useParams();
+	const [isMobile, setIsMobile] = useState(window.innerWidth <= 425);
+	const handleOpen = () => {
+		const id = prompt("Enter note key to open:", "note-");
+		if (!isEmpty(id)) {
+			const noteId = generateNoteId(id);
+			history.push(`/n/${noteId}`);
+		}
+	};
+
+	useEffect(() => {
+		const handleResize = () => {
+			setIsMobile(window.innerWidth <= 425);
+		};
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
+
 	return (
 		<header className="navbar">
 			<div className="wrapper">
@@ -15,19 +33,34 @@ export default function Navbar({ onSave, onDelete }) {
 						className="action-btn"
 						onClick={() => history.push("/new")}
 						id="new"
+						title="Create New"
 					>
-						New
+						{isMobile ? "N" : "New"}
 					</strong>
-					<strong className="action-btn" onClick={onSave} id="save">
-						Save
+					<strong
+						className="action-btn"
+						onClick={handleOpen}
+						id="open"
+						title="Open a note"
+					>
+						{isMobile ? "O" : "Open"}
+					</strong>
+					<strong
+						className="action-btn"
+						onClick={onSave}
+						id="save"
+						title="Save the Note"
+					>
+						{isMobile ? "S" : "Save"}
 					</strong>
 					{note && (
 						<strong
 							className="action-btn"
 							onClick={onDelete}
 							id="delete"
+							title="Delete the Note"
 						>
-							Delete
+							{isMobile ? "D" : "Delete"}
 						</strong>
 					)}
 				</div>

@@ -4,6 +4,9 @@ import { database as db } from "../utils/firebase";
 const getRef = (rest = "") => "public-notes/" + rest;
 
 class NoteService {
+	getAllNotes() {
+		return "https://msar-note.firebaseio.com/public-notes.json";
+	}
 	getAll() {
 		return new Promise((resolve, reject) => {
 			const dataRef = ref(db, getRef());
@@ -37,7 +40,8 @@ class NoteService {
 	}
 
 	async updateOrCreate(key, value, getData = false) {
-		// Write the new post's data simultaneously in the posts list and the user's post list.
+		if (!key) return false;
+
 		const updates = {};
 		updates[getRef(key)] = value;
 
@@ -47,6 +51,7 @@ class NoteService {
 	}
 
 	async delete(key, getData = false) {
+		if (!key) return false;
 		const all = await remove(ref(db, getRef(key)));
 		if (getData) return all;
 		return true;

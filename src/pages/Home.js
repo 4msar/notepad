@@ -11,9 +11,7 @@ export default function Home() {
 		if (
 			lastId &&
 			// eslint-disable-next-line no-restricted-globals
-			confirm(
-				"You have a last edited note,\n open the last edited note now!"
-			)
+			confirm("You have a last edited note,\nDo you want to open it?")
 		) {
 			history.push(`/n/${lastId}`);
 		} else {
@@ -23,7 +21,7 @@ export default function Home() {
 
 	return (
 		<Layout>
-			<div>Loading...</div>
+			<div className="flex-center loading">Loading...</div>
 		</Layout>
 	);
 }
