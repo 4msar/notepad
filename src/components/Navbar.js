@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams, useHistory } from "react-router-dom";
+import { decryptData } from "../utils/encryptions";
 import { generateNoteId, isEmpty } from "../utils/functions";
 
 export default function Navbar({ onSave, onDelete }) {

@@ -6,6 +6,7 @@ import useNote from "../hooks/useNote";
 import useSnackbar from "../hooks/useSnackbar";
 import NoteService from "../services/NoteService";
 import { setLastOpenId } from "../utils";
+import { decryptData } from "../utils/encryptions";
 import { debounce } from "../utils/functions";
 
 export default function Note() {
