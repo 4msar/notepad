@@ -29,7 +29,7 @@ export default function Note() {
 		setIsSaved(true);
 	};
 	const onDelete = () => {
-		const decryptedToken =  decryptData(encryptedToken);
+		const decryptedToken = encryptedToken ? decryptData(encryptedToken) : '';
 		if( decryptedToken !== noteId ){
 			showSnackbar("You can't delete without permission.", { variant: "warning" });
 			return null;
