@@ -17,7 +17,7 @@ export default function Navbar({ onSave, onDelete }) {
 
 	var urlParams = new URLSearchParams(window.location.search);
 	const encryptedToken = urlParams.get("token");
-	const decryptedToken = encryptedToken ? decryptData(encryptedToken) : null;
+	const decryptedToken = !isEmpty(encryptedToken) ? decryptData(encryptedToken ?? '') : null;
 
 	useEffect(() => {
 		const handleResize = () => {

@@ -8,7 +8,7 @@ import useSnackbar from "../hooks/useSnackbar";
 import NoteService from "../services/NoteService";
 import { setLastOpenId } from "../utils";
 import { decryptData } from "../utils/encryptions";
-import { debounce } from "../utils/functions";
+import { debounce, isEmpty } from "../utils/functions";
 
 export default function Note() {
 	const { note: noteId } = useParams();
@@ -29,7 +29,7 @@ export default function Note() {
 		setIsSaved(true);
 	};
 	const onDelete = () => {
-		const decryptedToken = encryptedToken ? decryptData(encryptedToken) : '';
+		const decryptedToken = !isEmpty(encryptedToken) ? decryptData(encryptedToken ?? '') : '';
 		if( decryptedToken !== noteId ){
 			showSnackbar("You can't delete without permission.", { variant: "warning" });
 			return null;
