@@ -1,9 +1,16 @@
 import { onValue, ref, remove, update } from "firebase/database";
+import { encryptData, decryptData } from "../utils/encryptions";
 import { database as db } from "../utils/firebase";
 
 const getRef = (rest = "") => "public-notes/" + rest;
 
 class NoteService {
+	encryption(){
+		return {
+			encrypt: encryptData,
+			decrypt: decryptData,
+		};
+	}
 	getAllNotes() {
 		return "https://msar-note.firebaseio.com/public-notes.json";
 	}
