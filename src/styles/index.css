@@ -136,7 +136,7 @@ header .name {
 	background-color: transparent;
 	height: 100%;
 	width: calc(100% - 100px);
-	padding: 30px 55px;
+	padding: 30px 50px;
 	line-height: 30px;
 	min-height: 100vh;
 

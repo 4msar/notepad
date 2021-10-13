@@ -14,6 +14,10 @@ export default function Navbar({ onSave, onDelete }) {
 		}
 	};
 
+	var urlParams = new URLSearchParams(window.location.search);
+	const encryptedToken = urlParams.get('token');
+	const decryptedToken =  decryptData(encryptedToken);
+
 	useEffect(() => {
 		const handleResize = () => {
 			setIsMobile(window.innerWidth <= 425);
@@ -53,7 +57,7 @@ export default function Navbar({ onSave, onDelete }) {
 					>
 						{isMobile ? "S" : "Save"}
 					</strong>
-					{note && (
+					{note && note === decryptedToken && (
 						<strong
 							className="action-btn"
 							onClick={onDelete}

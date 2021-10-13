@@ -13,6 +13,8 @@ export default function Note() {
 	const { data, saveData, syncNote } = useNote(noteId);
 	const history = useHistory();
 	const showSnackbar = useSnackbar();
+	var urlParams = new URLSearchParams(window.location.search);
+	const encryptedToken = urlParams.get('token');
 
 	useEffect(() => {
 		setLastOpenId(noteId);
@@ -23,6 +25,11 @@ export default function Note() {
 		showSnackbar("Note sync successfully!", { variant: "success" });
 	};
 	const onDelete = () => {
+		const decryptedToken =  decryptData(encryptedToken);
+		if( decryptedToken !== noteId ){
+			showSnackbar("You can't delete without permission.", { variant: "warning" });
+			return null;
+		}
 		// eslint-disable-next-line no-restricted-globals
 		const confirmed = confirm("Are you sure?");
 		if (confirmed) {

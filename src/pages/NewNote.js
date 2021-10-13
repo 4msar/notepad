@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import EditNote from "../components/EditNote";
 import Layout from "../components/Layout";
 import useNote from "../hooks/useNote";
+import { encryptData } from "../utils/encryptions";
 import { debounce } from "../utils/functions";
 
 export default function NewNote() {
@@ -14,7 +15,8 @@ export default function NewNote() {
 		const url = new URL(`${window.location.origin}/n/${noteId}`);
 		const returned = prompt("Here is your note link:\n", url.toString());
 		if (returned) {
-			history.push(`/n/${noteId}`);
+			const token = encryptData(noteId);
+			history.push(`/n/${noteId}?token=${token}`);
 		}
 	};
 
