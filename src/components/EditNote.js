@@ -4,6 +4,7 @@ export default function EditNote({ ...props }) {
 	return (
 		<section className="paper">
 			<textarea
+				autoFocus
 				type="text"
 				placeholder="Type your note here"
 				{...props}

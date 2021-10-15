@@ -30,7 +30,7 @@ class NoteService {
 		});
 	}
 
-	getItem(id) {
+	getItem(id, callback) {
 		return new Promise((resolve, reject) => {
 			const dataRef = ref(db, getRef(id));
 			onValue(
@@ -38,6 +38,9 @@ class NoteService {
 				(snapshot) => {
 					const data = snapshot.val();
 					resolve(data);
+					if(typeof callback ==='function'){
+						callback(data);
+					}
 				},
 				(error) => {
 					reject(error);

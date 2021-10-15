@@ -16,7 +16,7 @@ export default function Note() {
 	const showSnackbar = useSnackbar();
 	var urlParams = new URLSearchParams(window.location.search);
 	const encryptedToken = urlParams.get('token');
-
+	console.log('note',{data});
 	useEffect(() => {
 		setLastOpenId(noteId);
 	}, [noteId]);
@@ -45,6 +45,7 @@ export default function Note() {
 		const {
 			target: { value },
 		} = event;
+		console.log({value});
 		saveData(value);
 	};
 	const inputHandler = debounce(inputChange, 1000);

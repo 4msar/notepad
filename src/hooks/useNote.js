@@ -16,20 +16,24 @@ const useNote = (id) => {
 	};
 
 	useEffect(() => {
-		const getItem = async () => {
+		const getItem =() => {
 			if (id) {
-				const note = await NoteService.getItem(id);
-				if (note) {
-					saveData(note);
-					setHasNote(true);
-				} else {
-					setHasNote(false);
-				}
+				NoteService.getItem(id, (note)=>{
+					if (note) {
+						saveData(note);
+						setHasNote(true);
+					} else {
+						setHasNote(false);
+					}
+				});
+				
 			}
 		};
 		getItem();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [id]);
+
+	console.log('return',{data});
 
 	return { data, hasData: hasNote, saveData, syncNote };
 };
