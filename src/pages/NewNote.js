@@ -14,7 +14,7 @@ export default function NewNote() {
 		const noteId = syncNote();
 		const url = new URL(`${window.location.origin}/n/${noteId}`);
 		const returned = prompt("Here is your note link:\n", url.toString());
-		if (returned) {
+		if (returned && noteId) {
 			const token = encryptData(noteId);
 			history.push(`/n/${noteId}?token=${token}`);
 		}
@@ -30,9 +30,7 @@ export default function NewNote() {
 
 	return (
 		<Layout onSave={onSave}>
-			<div className="new-note">
-				<EditNote defaultValue={data} onChange={inputHandler} />
-			</div>
+			<EditNote defaultValue={data} onChange={inputHandler} />
 		</Layout>
 	);
 }

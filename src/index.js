@@ -3,11 +3,10 @@ import ReactDOM from "react-dom";
 import { SnackbarProvider } from 'react-notistack';
 
 import "./styles/index.css";
-
 import App from "./App";
-import reportWebVitals from "./reportWebVitals";
 
-import "./utils/firebase";
+import reportWebVitals from "./reportWebVitals";
+import * as serviceWorker from "./serviceWorkerRegistration";
 
 ReactDOM.render(
 	<React.StrictMode>
@@ -22,6 +21,9 @@ ReactDOM.render(
 	</React.StrictMode>,
 	document.getElementById("root")
 );
+
+// To enable offline compability register the SW
+serviceWorker.register();
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

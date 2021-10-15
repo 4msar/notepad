@@ -1,7 +1,8 @@
 {
-  "short_name": "Note",
+  "short_name": "Noto",
   "name": "Simple note taking app",
-  "version": "v1.0.1",
+  "description": "Simple note taking application, with online sync & easily shareable.",
+  "version": "v1.1.0",
   "icons": [
     {
       "src": "favicon.ico",
@@ -17,6 +18,22 @@
       "src": "logo512.png",
       "type": "image/png",
       "sizes": "512x512"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Create a new note",
+      "short_name": "New",
+      "description": "Create a new note quickly.",
+      "url": "/new?source=pwa",
+      "icons": [{ "src": "logo128.png", "sizes": "128x128" }]
+    },
+    {
+      "name": "Home page of the notes",
+      "short_name": "Home",
+      "description": "View or create notes.",
+      "url": "/",
+      "icons": [{ "src": "logo128.png", "sizes": "128x128" }]
     }
   ],
   "start_url": ".",
