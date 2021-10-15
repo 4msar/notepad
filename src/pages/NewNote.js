@@ -24,13 +24,13 @@ export default function NewNote() {
 		const {
 			target: { value },
 		} = event;
-		saveData(value);
+		saveData({editedAt: new Date().getTime(), note: value});
 	};
 	const inputHandler = debounce(inputChange, 1000);
 
 	return (
 		<Layout onSave={onSave}>
-			<EditNote defaultValue={data} onChange={inputHandler} />
+			<EditNote defaultValue={data.note} onChange={inputHandler} />
 		</Layout>
 	);
 }
