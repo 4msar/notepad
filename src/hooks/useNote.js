@@ -8,10 +8,11 @@ const useNote = (id) => {
 	const tempKey = createLocalNoteId(id);
 	const { data, saveData } = useLocalStorage(tempKey);
 	const [hasNote, setHasNote] = useState(false);
+	const [onlineNote, setOnlineNote] = useState(data);
 
-	const syncNote = (noteId) => {
+	const syncNote = (noteId = null) => {
 		const key = generateNoteId(noteId ?? id);
-		NoteService.updateOrCreate(key, data);
+		NoteService.updateOrCreate(key, {...data, editedAt: new Date().getTime()});
 		return key;
 	};
 
@@ -19,11 +20,17 @@ const useNote = (id) => {
 		const getItem =() => {
 			if (id) {
 				NoteService.getItem(id, (note)=>{
-					if (note) {
-						saveData(note);
-						setHasNote(true);
-					} else {
-						setHasNote(false);
+					if( data.editedAt >= note.editedAt ){
+						saveData(data);
+						// syncNote();
+						setOnlineNote(note);
+					}else{
+						if (note) {
+							saveData(note);
+							setHasNote(true);
+						} else {
+							setHasNote(false);
+						}
 					}
 				});
 				
@@ -33,9 +40,7 @@ const useNote = (id) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [id]);
 
-	console.log('return',{data});
-
-	return { data, hasData: hasNote, saveData, syncNote };
+	return { data, syncedData: onlineNote, hasData: hasNote, saveData, syncNote };
 };
 
 export default useNote;

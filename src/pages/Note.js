@@ -12,16 +12,22 @@ import { debounce, isEmpty } from "../utils/functions";
 
 export default function Note() {
 	const { note: noteId } = useParams();
-	const { data, saveData, syncNote } = useNote(noteId);
-	const [isSaved, setIsSaved] = useState(true);
+	const { data, syncedData, saveData, syncNote } = useNote(noteId);
+	const [isSaved, setIsSaved] = useState(data.editedAt <= syncedData.editedAt);
+
 	const history = useHistory();
 	const showSnackbar = useSnackbar();
 	var urlParams = new URLSearchParams(window.location.search);
 	const encryptedToken = urlParams.get('token');
-	console.log('note',{data});
+
 	useEffect(() => {
 		setLastOpenId(noteId);
 	}, [noteId]);
+	
+	useEffect(() => {
+		setIsSaved(data.editedAt <= syncedData.editedAt);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [syncedData]);
 
 	const onSave = () => {
 		syncNote(noteId);
@@ -49,15 +55,15 @@ export default function Note() {
 		const {
 			target: { value },
 		} = event;
-		console.log({value});
-		saveData(value);
+
+		saveData({editedAt: new Date().getTime(), note: value});
 		setIsSaved(false);
 	};
 	const inputHandler = debounce(inputChange, 1000);
 
 	return (
 		<Layout onSave={onSave} onDelete={onDelete}>
-			<EditNote defaultValue={data} onChange={inputHandler} />
+			<EditNote defaultValue={data.note} onChange={inputHandler} />
 			{!isSaved && <UnSaveNotice />}
 		</Layout>
 	);
