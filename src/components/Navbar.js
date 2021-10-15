@@ -9,7 +9,7 @@ import {
 } from "../utils/functions";
 import { Sync, Menu } from "./Icons";
 
-export default function Navbar({ onSave, canSync, onSync, onDelete }) {
+export default function Navbar({ onSave, onDelete }) {
 	const history = useHistory();
 	const { note } = useParams();
 	const [isMobile, setIsMobile] = useState(window.innerWidth <= 425);
@@ -88,25 +88,6 @@ export default function Navbar({ onSave, canSync, onSync, onDelete }) {
 						Save
 					</strong>
 				)}
-				{onSync &&
-					canSync &&
-					(isMobile ? (
-						<strong
-							className="action-btn"
-							onClick={onSync}
-							id="sync"
-							title="Reset Local changes & sync with online."
-						>
-							Reset
-						</strong>
-					) : (
-						<Sync
-							className="action-btn flex-center"
-							onClick={onSync}
-							id="sync"
-							title="Reset Local changes & sync with online."
-						/>
-					))}
 				{note && !isReadOnly && note === decryptedToken && (
 					<strong
 						className="action-btn"

@@ -88,8 +88,6 @@ export default function Note() {
 	return (
 		<Layout
 			onSave={onSave}
-			canSync={!isSaved}
-			onSync={handleSync}
 			onDelete={onDelete}
 		>
 			<EditNote
