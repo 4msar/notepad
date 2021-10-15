@@ -1,3 +1,5 @@
+import { encryptData } from "./encryptions";
+
 /**
  * Filter an object
  * @param  {[type]}   obj      [description]
@@ -314,7 +316,12 @@ export function replaceUndefinied(item) {
 	return JSON.parse(str);
 }
 
-export function generateNoteId(id = null) {
+export function generateNoteId(noteId = '') {
+	let id = noteId;
+	if (id.startsWith("msar-")) {
+		id = noteId.slice(5);
+	}
+
 	if (!id) {
 		const randomId = Math.random().toString(36).substr(5, 15);
 		return "note-" + randomId;
@@ -325,7 +332,15 @@ export function generateNoteId(id = null) {
 	}
 	return id;
 }
+export function generateNoteIdWithToken(id = '') {
+	if( id.startsWith("note-") ) { return ''; }
 
+	if( id.startsWith("msar-") ) {
+		const noteToken = encryptData(`note-${id.slice(5)}`);
+		return `?token=${noteToken}`;
+	}
+	return '';
+}
 
 export function isJsonString(str) {
     try {

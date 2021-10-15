@@ -1,6 +1,6 @@
-import React from "react";
+import React, { forwardRef } from "react";
 
-export default function EditNote({ ...props }) {
+const EditNote = forwardRef((props, ref)=>{
 	return (
 		<section className="paper">
 			<textarea
@@ -8,7 +8,10 @@ export default function EditNote({ ...props }) {
 				type="text"
 				placeholder="Type your note here"
 				{...props}
+				ref={ref}
 			></textarea>
 		</section>
-	);
-}
+	)
+})
+
+export default EditNote;

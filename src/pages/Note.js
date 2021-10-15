@@ -1,24 +1,27 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import EditNote from "../components/EditNote";
-import UnSaveNotice from '../components/UnSaveNotice';
 import Layout from "../components/Layout";
+import UnSaveNotice from '../components/UnSaveNotice';
+import useHotKeys from "../hooks/useHotKeys";
 import useNote from "../hooks/useNote";
 import useSnackbar from "../hooks/useSnackbar";
+import useUnload from "../hooks/useUnload";
 import NoteService from "../services/NoteService";
-import { setLastOpenId } from "../utils";
+import { removeLastOpenId, setLastOpenId } from "../utils";
 import { decryptData } from "../utils/encryptions";
 import { debounce, isEmpty } from "../utils/functions";
 
 export default function Note() {
 	const { note: noteId } = useParams();
-	const { data, syncedData, saveData, syncNote } = useNote(noteId);
-	const [isSaved, setIsSaved] = useState(data.editedAt <= syncedData.editedAt);
-
+	const { data, syncedData, isSaved, setIsSaved, saveData, syncNote } = useNote(noteId);
 	const history = useHistory();
 	const showSnackbar = useSnackbar();
 	var urlParams = new URLSearchParams(window.location.search);
 	const encryptedToken = urlParams.get('token');
+	const isReadOnly = urlParams.has('readonly');
+
+	useUnload(!isSaved);
 
 	useEffect(() => {
 		setLastOpenId(noteId);
@@ -46,6 +49,7 @@ export default function Note() {
 			NoteService.delete(noteId);
 			saveData("");
 			setIsSaved(true);
+			removeLastOpenId();
 			showSnackbar("Note deleted successfully!", { variant: "warning" });
 			history.push(`/new`);
 		}
@@ -61,9 +65,18 @@ export default function Note() {
 	};
 	const inputHandler = debounce(inputChange, 1000);
 
+	useHotKeys(['ctrl', 's', 'cmd', 's'], () => {
+		console.log('Saved by Keyboard Shortcut.');
+		onSave();
+	});
+
 	return (
 		<Layout onSave={onSave} onDelete={onDelete}>
-			<EditNote defaultValue={data.note} onChange={inputHandler} />
+			<EditNote 
+				defaultValue={data.note} 
+				readOnly={isReadOnly} 
+				onChange={inputHandler}
+			/>
 			{!isSaved && <UnSaveNotice />}
 		</Layout>
 	);

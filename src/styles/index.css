@@ -25,6 +25,10 @@ a {
 	text-decoration: none;
 }
 
+.App {
+	overflow: hidden;
+}
+
 .flex-center {
 	display: flex;
 	justify-content: center;
@@ -39,6 +43,7 @@ header {
 	color: #eee;
 	background: #1f1f1f;
 	height: 50px;
+	max-height: 55px;
 	position: sticky;
 	top: 0;
 	padding: 0 40px;
@@ -56,7 +61,7 @@ header .name {
 .actions {
 	display: flex;
 }
-.action-btn {
+.actions .action-btn {
 	color: #fff;
 	border: 1px solid;
 	font-size: 15px;
@@ -66,35 +71,70 @@ header .name {
 	transition: 0.4s;
 	margin-right: 10px;
 }
-#save {
+.actions #save {
 	border-color: #4ca746;
 }
-#save:hover {
+.actions #save:hover {
 	background-color: #4ca746;
 	color: #fff;
 }
-#delete {
+.actions #delete {
 	color: #dc3545;
 	margin: 0;
 }
-#delete:hover {
+.actions #delete:hover {
 	background-color: #dc3545;
 	color: #fff;
 }
-#new {
+.actions #new {
 	border-color: #157af6;
 }
-#new:hover {
+.actions #new:hover {
 	background-color: #157af6;
 	color: #fff;
 }
-#open {
+.actions #open {
 	color: #9acd32;
 	border-color: #9acd32;
 }
-#open:hover {
+.actions #open:hover {
 	background-color: #9acd32;
 	color: #fff;
+}
+
+.menu-box {
+	max-height: 200px;
+    width: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    position: absolute;
+    right: -200px;
+    top: 55px;
+    background-color: #f7f7f7;
+    border-bottom-left-radius: 10px;
+    overflow: hidden;
+	transition: all 0.6s ease-in-out;
+}
+.menu-box.open {
+	right: 0;
+	transition: all 0.6s ease-in-out;
+}
+
+.menu-box .action-btn {
+	cursor: pointer;
+    display: block;
+    width: 100%;
+    padding: 5px 10px;
+    text-align: right;
+	color: #333;
+}
+.menu-box .action-btn:hover {
+	color: #333;
+	background-color: #f7ffff;
+}
+.menu-box .action-btn:not(:last-child) {
+	border-bottom: 1px solid #ddd;
 }
 
 main {

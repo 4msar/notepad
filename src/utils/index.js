@@ -9,6 +9,14 @@ export const setLastOpenId = (id) => {
 	return localStorage.setItem(LAST_NOTE_ID, id);
 };
 
+export const removeLastOpenId = () => {
+	return localStorage.removeItem(LAST_NOTE_ID);
+};
+
+export const removeLocalNote = () => {
+	return localStorage.removeItem(LOCAL_NOTES);
+};
+
 export const createLocalNoteId = (id) => {
 	if (!id) {
 		return LOCAL_NOTES;

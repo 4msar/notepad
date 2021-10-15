@@ -1,5 +1,5 @@
 import { onValue, ref, remove, update } from "firebase/database";
-import { encryptData, decryptData } from "../utils/encryptions";
+import { decryptData, encryptData } from "../utils/encryptions";
 import { database as db } from "../utils/firebase";
 
 const getRef = (rest = "") => "public-notes/" + rest;
@@ -32,6 +32,9 @@ class NoteService {
 
 	getItem(id, callback) {
 		return new Promise((resolve, reject) => {
+			if( !id ){
+				return reject('Id is required!');
+			}
 			const dataRef = ref(db, getRef(id));
 			onValue(
 				dataRef,
@@ -70,4 +73,4 @@ class NoteService {
 
 export default new NoteService();
 
-window.NoteService = new NoteService();
+window.NS = new NoteService();
