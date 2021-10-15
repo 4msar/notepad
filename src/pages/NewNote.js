@@ -12,7 +12,7 @@ export default function NewNote() {
 	const { data, saveData, syncNote } = useNote();
 	const history = useHistory();
 
-	useUnload(!isEmpty(data.note));
+	useUnload(!isEmpty(data?.note));
 
 	const onSave = () => {
 		const noteId = syncNote();
@@ -28,21 +28,18 @@ export default function NewNote() {
 		const {
 			target: { value },
 		} = event;
-		saveData({editedAt: new Date().getTime(), note: value});
+		saveData({ editedAt: new Date().getTime(), note: value });
 	};
 	const inputHandler = debounce(inputChange, 1000);
 
-	useHotKeys(['ctrl', 's', 'cmd', 's'], () => {
-		console.log('Saved by Keyboard Shortcut.');
+	useHotKeys(["ctrl", "cmd", "s"], () => {
+		console.log("Saved by Keyboard Shortcut.");
 		onSave();
 	});
 
 	return (
 		<Layout onSave={onSave}>
-			<EditNote 
-				defaultValue={data.note} 
-				onChange={inputHandler} 
-			/>
+			<EditNote defaultValue={data.note} onChange={inputHandler} />
 		</Layout>
 	);
 }

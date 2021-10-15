@@ -1,59 +1,67 @@
 import { useEffect, useState } from "react";
 import NoteService from "../services/NoteService";
-import { createLocalNoteId } from "../utils";
+import { createLocalNoteId, getLocalData } from "../utils";
+import { INITIAL_NOTE } from "../utils/constant";
 import { generateNoteId, isEmpty } from "../utils/functions";
 import useLocalStorage from "./useLocalStorage";
 
 const useNote = (id) => {
 	const tempKey = createLocalNoteId(id);
-	const { data, saveData } = useLocalStorage(tempKey);
-	const [hasNote, setHasNote] = useState(false);
+	const { data, saveData } = useLocalStorage(tempKey, INITIAL_NOTE);
 	const [onlineNote, setOnlineNote] = useState(data);
 
-	const [isSaved, setIsSaved] = useState(data.editedAt <= onlineNote.editedAt);
+	const [isSaved, setIsSaved] = useState(
+		data?.editedAt <= onlineNote?.editedAt
+	);
 
 	const syncNote = (noteId = null) => {
 		const key = generateNoteId(noteId ?? id);
-		const savedData = {...data, editedAt: (new Date().getTime() + 10) };
+		const savedData = { ...data, editedAt: new Date().getTime() + 10 };
 		NoteService.updateOrCreate(key, savedData);
-		setOnlineNote(savedData);
-		setIsSaved(true);
 		return key;
 	};
 
-	useEffect(() => {
-		const getItem =() => {
-			if (!isEmpty(id)) {
-				NoteService.getItem(id, (note)=>{
-					if( data?.editedAt >= note?.editedAt ){
-						saveData(data);
-						// syncNote();
-						setOnlineNote(note);
-					}else{
-						if (note) {
-							saveData(note);
-							setOnlineNote(note);
-							setHasNote(true);
-						} else {
-							setHasNote(false);
-						}
-					}
-				});
-				
+	const syncOnline = (noteId = null) => {
+		NoteService.getItem(noteId ?? id, (note) => {
+			if (isEmpty(note)) {
+				return false;
 			}
-		};
-		getItem();
+
+			saveData(note);
+			setOnlineNote(note);
+		});
+	};
+
+	useEffect(() => {
+		if (!isEmpty(id)) {
+			NoteService.getItem(id, (note) => {
+				if (isEmpty(note)) {
+					return false;
+				}
+
+				setOnlineNote(note);
+
+				const localData = getLocalData(id);
+				if (isEmpty(localData?.note)) {
+					saveData(note);
+					setIsSaved(true);
+				}
+				if (localData?.editedAt <= note?.editedAt) {
+					saveData(note);
+				}
+			});
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [id]);
 
-	return { 
-		data, 
+	return {
+		data,
 		isSaved,
-		syncedData: onlineNote, 
-		hasData: hasNote, 
+		syncedData: onlineNote,
 		setIsSaved,
-		saveData, 
-		syncNote
+		saveData,
+		syncNote,
+		syncOnline,
 	};
 };
 

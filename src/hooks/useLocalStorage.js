@@ -1,28 +1,26 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { getLocalData } from "../utils";
 import { LOCAL_NOTES } from "../utils/constant";
-import { isJsonString } from "../utils/functions";
 
-const useLocalStorage = (key = LOCAL_NOTES) => {
-	const data = localStorage.getItem(key);
-	const initValue = isJsonString(data) ? (JSON.parse(data) ?? {}) : (data || "");
-	const [item, setItem] = useState(initValue);
-	const saveData = (data = "") => {
-		let saveableData = data;
-		if( typeof data !== 'string' ){
-			saveableData = JSON.stringify(data);
-		}
+const useLocalStorage = (key = LOCAL_NOTES, init = "") => {
+	const [item, setItem] = useState(init);
 
-		setItem(data);
-		localStorage.setItem(key, saveableData);
-	};
+	const saveData = useCallback(
+		(data = "") => {
+			let saveableData = data;
+			if (typeof data !== "string") {
+				saveableData = JSON.stringify(data);
+			}
+
+			setItem(data);
+			localStorage.setItem(key, saveableData);
+		},
+		[key]
+	);
 
 	useEffect(() => {
-		if( isJsonString(data) ){
-			setItem(JSON.parse(data) ?? {});
-		}else{
-			setItem(data ?? "");
-		}
-	}, [data]);
+		setItem(getLocalData(key));
+	}, [key]);
 
 	return { data: item, saveData };
 };

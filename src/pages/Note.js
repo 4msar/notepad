@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import EditNote from "../components/EditNote";
 import Layout from "../components/Layout";
-import UnSaveNotice from '../components/UnSaveNotice';
+import UnSaveNotice from "../components/UnSaveNotice";
 import useHotKeys from "../hooks/useHotKeys";
 import useNote from "../hooks/useNote";
 import useSnackbar from "../hooks/useSnackbar";
@@ -14,33 +14,40 @@ import { debounce, isEmpty } from "../utils/functions";
 
 export default function Note() {
 	const { note: noteId } = useParams();
-	const { data, syncedData, isSaved, setIsSaved, saveData, syncNote } = useNote(noteId);
+	const {
+		data,
+		syncedData,
+		isSaved,
+		setIsSaved,
+		saveData,
+		syncNote,
+		syncOnline,
+	} = useNote(noteId);
 	const history = useHistory();
 	const showSnackbar = useSnackbar();
+
 	var urlParams = new URLSearchParams(window.location.search);
-	const encryptedToken = urlParams.get('token');
-	const isReadOnly = urlParams.has('readonly');
+	const encryptedToken = urlParams.get("token");
+	const isReadOnly = urlParams.has("readonly");
 
 	useUnload(!isSaved);
-
-	useEffect(() => {
-		setLastOpenId(noteId);
-	}, [noteId]);
-	
-	useEffect(() => {
-		setIsSaved(data.editedAt <= syncedData.editedAt);
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [syncedData]);
 
 	const onSave = () => {
 		syncNote(noteId);
 		showSnackbar("Note sync successfully!", { variant: "success" });
 		setIsSaved(true);
 	};
+	const handleSync = () => {
+		syncOnline();
+	};
 	const onDelete = () => {
-		const decryptedToken = !isEmpty(encryptedToken) ? decryptData(encryptedToken ?? '') : '';
-		if( decryptedToken !== noteId ){
-			showSnackbar("You can't delete without permission.", { variant: "warning" });
+		const decryptedToken = !isEmpty(encryptedToken)
+			? decryptData(encryptedToken ?? "")
+			: "";
+		if (decryptedToken !== noteId) {
+			showSnackbar("You can't delete without permission.", {
+				variant: "warning",
+			});
 			return null;
 		}
 		// eslint-disable-next-line no-restricted-globals
@@ -59,25 +66,38 @@ export default function Note() {
 		const {
 			target: { value },
 		} = event;
-
-		saveData({editedAt: new Date().getTime(), note: value});
+		saveData({ editedAt: new Date().getTime(), note: value });
 		setIsSaved(false);
 	};
 	const inputHandler = debounce(inputChange, 1000);
 
-	useHotKeys(['ctrl', 's', 'cmd', 's'], () => {
-		console.log('Saved by Keyboard Shortcut.');
+	useHotKeys(["ctrl", "cmd", "s"], () => {
+		console.log("Saved by Keyboard Shortcut.");
 		onSave();
 	});
 
+	useEffect(() => {
+		setLastOpenId(noteId);
+	}, [noteId]);
+
+	useEffect(() => {
+		setIsSaved(data?.editedAt <= syncedData?.editedAt);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [syncedData]);
+
 	return (
-		<Layout onSave={onSave} onDelete={onDelete}>
-			<EditNote 
-				defaultValue={data.note} 
-				readOnly={isReadOnly} 
+		<Layout
+			onSave={onSave}
+			canSync={!isSaved}
+			onSync={handleSync}
+			onDelete={onDelete}
+		>
+			<EditNote
+				defaultValue={data?.note ?? ""}
+				readOnly={isReadOnly}
 				onChange={inputHandler}
 			/>
-			{!isSaved && <UnSaveNotice />}
+			{!isSaved && <UnSaveNotice onReset={handleSync} />}
 		</Layout>
 	);
 }
