@@ -184,7 +184,7 @@ main {
 	-o-background-size: 100% 30px;
 	background-size: 100% 30px;
 
-	height: auto;
+	height: calc(100vh - 55px);
 	overflow: hidden;
 }
 
@@ -208,7 +208,7 @@ main {
 	border: none;
 	outline: none;
 	background-color: transparent;
-	min-height: calc(100vh - 55px);
+	min-height: calc(100vh - 110px);
 	width: calc(100% - 100px);
 	padding: 30px 50px;
 	line-height: 30px;
