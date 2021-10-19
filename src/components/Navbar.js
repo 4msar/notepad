@@ -1,19 +1,21 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import useHotKeys from "../hooks/useHotKeys";
+import { getTheme, setTheme } from "../utils";
 import { decryptData } from "../utils/encryptions";
 import {
 	generateNoteId,
 	generateNoteIdWithToken,
 	isEmpty,
 } from "../utils/functions";
-import { Sync, Menu } from "./Icons";
+import { Sun, Moon, Menu } from "./Icons";
 
 export default function Navbar({ onSave, onDelete }) {
 	const history = useHistory();
 	const { note } = useParams();
 	const [isMobile, setIsMobile] = useState(window.innerWidth <= 425);
 	const [menuOpen, toggleMenu] = useState(false);
+	const [isDarkMood, toggleDarkMood] = useState(getTheme() === "dark");
 	const menuRef = useRef();
 
 	const handleOpen = () => {
@@ -54,9 +56,22 @@ export default function Navbar({ onSave, onDelete }) {
 			document.removeEventListener("click", menuHandler);
 		};
 	}, []);
+	useEffect(() => {
+		const theme = isDarkMood === true ? "dark" : "light";
+		document.documentElement.setAttribute("data-theme", theme);
+	}, [isDarkMood]);
 
 	const onNewClick = () => {
 		history.push("/new");
+	};
+
+	const switchTheme = () => {
+		toggleDarkMood((mood) => {
+			const theme = !mood === true ? "dark" : "light";
+			setTheme(theme);
+			// document.documentElement.setAttribute("data-theme", theme);
+			return !mood;
+		});
 	};
 
 	const menuActions = () => {
@@ -109,6 +124,11 @@ export default function Navbar({ onSave, onDelete }) {
 					<Link title="Simple Note Taking Application..." to="/">
 						Noto
 					</Link>
+					{isDarkMood ? (
+						<Sun className="theme-switch" onClick={switchTheme} />
+					) : (
+						<Moon className="theme-switch" onClick={switchTheme} />
+					)}
 				</h1>
 				<div className="actions">
 					{isMobile && (

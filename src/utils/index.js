@@ -1,4 +1,4 @@
-import { INITIAL_NOTE, LAST_NOTE_ID, LOCAL_NOTES } from "./constant";
+import { APP_THEME, INITIAL_NOTE, LAST_NOTE_ID, LOCAL_NOTES } from "./constant";
 import { generateNoteId, isEmpty, isJsonString } from "./functions";
 
 export const getLastOpenId = () => {
@@ -7,6 +7,14 @@ export const getLastOpenId = () => {
 
 export const setLastOpenId = (id) => {
 	return localStorage.setItem(LAST_NOTE_ID, id);
+};
+
+export const getTheme = () => {
+	return localStorage.getItem(APP_THEME) ?? "light";
+};
+
+export const setTheme = (name) => {
+	return localStorage.setItem(APP_THEME, name);
 };
 
 export const removeLastOpenId = () => {
