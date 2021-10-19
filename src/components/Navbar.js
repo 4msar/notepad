@@ -20,6 +20,7 @@ export default function Navbar({ onSave, onDelete }) {
 
 	const handleOpen = () => {
 		const id = prompt("Enter note key to open:", "note-");
+		toggleMenu(false);
 		if (!isEmpty(id)) {
 			const noteId = generateNoteId(id);
 			history.push(`/n/${noteId}${generateNoteIdWithToken(id)}`);
