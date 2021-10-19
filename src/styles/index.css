@@ -1,6 +1,28 @@
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@200;400;600;800&display=swap");
 @import url("https://fonts.maateen.me/kalpurush/font.css");
 
+
+:root {
+
+	--header-height: 55px;
+
+	--header-bg: #3C4257;
+	--text-color: #3C4257;
+	--text-color-light: #eee;
+
+	--dropdown-menu-bg: #F7FAFC;
+	--dropdown-menu-item-bg: #ccd2db;
+	--border-color: #E3E8EE;
+
+	--editor-border-color: #f9d3d3;
+
+	--color-primary: #9acd32;
+	--color-success: #4ca746;
+	--color-error: #dc3545;
+	--color-info: #157af6;
+	--color-warning: #ffff00;
+}
+
 * {
 	margin: 0;
 	padding: 0;
@@ -21,7 +43,7 @@ code {
 }
 
 a {
-	color: #eee;
+	color: var(--text-color-light);
 	text-decoration: none;
 }
 
@@ -40,9 +62,9 @@ a {
 }
 
 header {
-	color: #eee;
-	background: #1f1f1f;
-    height: 50px;
+	color: var(--text-color-light);
+	background: var(--header-bg);
+    height: var(--header-height);
     width: 100%;
     max-height: 55px;
     position: fixed;
@@ -64,7 +86,7 @@ header .name {
 	display: flex;
 }
 .actions .action-btn {
-	color: #fff;
+	color: var(--text-color-light);
 	border: 1px solid;
 	font-size: 15px;
 	padding: 1px 6px;
@@ -74,42 +96,42 @@ header .name {
 	margin-right: 10px;
 }
 .actions #save {
-	border-color: #4ca746;
+	border-color: var(--color-success);
 }
 .actions #save:hover {
-	background-color: #4ca746;
-	color: #fff;
+	background-color: var(--color-success);
+	color: var(--text-color-light);
 }
 .actions #delete {
-	color: #dc3545;
+	color: var(--color-error);
 	margin: 0;
 }
 .actions #delete:hover {
-	background-color: #dc3545;
-	color: #fff;
+	background-color: var(--color-error);
+	color: var(--text-color-light);
 }
 .actions #new {
-	border-color: #157af6;
+	border-color: var(--color-info);
 }
 .actions #new:hover {
-	background-color: #157af6;
-	color: #fff;
+	background-color: var(--color-info);
+	color: var(--text-color-light);
 }
 .actions #open {
-	color: #9acd32;
-	border-color: #9acd32;
+	color: var(--color-primary);
+	border-color: var(--color-primary);
 }
 .actions #open:hover {
-	background-color: #9acd32;
-	color: #fff;
+	background-color: var(--color-primary);
+	color: var(--text-color-light);
 }
 .actions #sync {
-	color: #ffff00;
-	border-color: #ffff00;
+	color: var(--color-warning);
+	border-color: var(--color-warning);
 }
 .actions #sync:hover {
-	background-color: #ffff00;
-	color: #333;
+	background-color: var(--color-warning);
+	color: var(--text-color);
 }
 
 .menu-box {
@@ -121,7 +143,7 @@ header .name {
 	position: absolute;
 	right: -200px;
 	top: 55px;
-	background-color: #f7f7f7;
+	background-color: var(--dropdown-menu-bg);
 	border-bottom-left-radius: 10px;
 	overflow: hidden;
 	transition: all 0.4s ease-in-out;
@@ -137,28 +159,28 @@ header .name {
 	width: 100%;
 	padding: 5px 30px;
 	text-align: right;
-	color: #333;
+	color: var(--text-color);
 }
 .menu-box .action-btn:hover {
-	color: #333;
-	background-color: #f7ffff;
+	color: var(--text-color);
+	background-color: var(--dropdown-menu-item-bg);
 }
 .menu-box .action-btn:not(:last-child) {
-	border-bottom: 1px solid #ddd;
+	border-bottom: 1px solid var(--border-color);
 }
 
 main {
 	position: relative;
-	margin-top: 50px;
+	margin-top: var(--header-height);;
 }
 .unsaved {
 	position: fixed;
 	bottom: 0;
 	right: 0;
-	background-color: #dc3545;
+	background-color: var(--color-error);
 	border-top-left-radius: 10px;
 	padding: 5px 10px;
-	color: #fff;
+	color: var(--text-color-light);
 	font-weight: 800;
 	display: flex;
 	justify-content: space-between;
@@ -195,14 +217,14 @@ main {
 	top: 0;
 	left: 39px;
 	bottom: 0;
-	border-left: 1px solid #f9d3d3;
+	border-left: 1px solid var(--editor-border-color);
 }
 
 .paper textarea {
 	font-family: "Nunito", "Kalpurush", sans-serif;
 	font-weight: 400;
 	font-size: 20px;
-	color: #333;
+	color: var(--text-color);
 	resize: none;
 	display: block;
 	border: none;
