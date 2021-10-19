@@ -293,6 +293,7 @@ main {
 	.paper textarea {
 		-webkit-overflow-scrolling: touch;
 		padding: 30px 25px;
+		width: calc(100% - 50px);
 	}
 	.__snackbar_container {
 		align-items: center !important;
