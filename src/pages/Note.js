@@ -73,9 +73,7 @@ export default function Note() {
 
 	useHotKeys(["ctrl", "cmd", "s"], () => {
 		console.log("Saved by Keyboard Shortcut.");
-		setTimeout(()=>{
-			onSave();
-		},1000);
+		onSave();
 	});
 
 	useEffect(() => {
