@@ -120,7 +120,7 @@ export default function Navbar({ onSave, onDelete }) {
 
 	return (
 		<header ref={menuRef} className="navbar">
-			<div className="wrapper">
+			<div className="wrapper base-wrapper">
 				<h1 className="name">
 					<Link title="Simple Note Taking Application..." to="/">
 						Noto

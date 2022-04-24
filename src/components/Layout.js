@@ -5,7 +5,7 @@ export default function Layout({ children, ...props }) {
 	return (
 		<div className="App">
 			<Navbar {...props} />
-			<main>{children}</main>
+			<main className="base-wrapper">{children}</main>
 		</div>
 	);
 }
