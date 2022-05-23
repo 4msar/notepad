@@ -1,8 +1,10 @@
-import { forwardRef } from "react";
+import { forwardRef, useEffect } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import { useParams } from "react-router-dom";
 
 const TipTapEditor = forwardRef(({ defaultValue, onChange, ...props }, ref) => {
+    const { note } = useParams();
     const editor = useEditor({
         extensions: [StarterKit],
         content: defaultValue ?? "",
@@ -22,8 +24,27 @@ const TipTapEditor = forwardRef(({ defaultValue, onChange, ...props }, ref) => {
         ...props,
     });
 
+    // useEffect(() => {
+    //     if (editor?.commandManager?.editor?.commands) {
+    //         editor.commandManager.editor.commands.setContent(defaultValue);
+    //     }
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [defaultValue]);
+
+    useEffect(() => {
+        if (editor?.commandManager?.editor?.commands) {
+            editor.commandManager.editor.commands.setContent(defaultValue);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [note])
+
     return (
-        <EditorContent className="paper tiptap" ref={ref} editor={editor} />
+        <EditorContent
+            ref={ref}
+            className="paper tiptap"
+            value={defaultValue}
+            editor={editor}
+        />
     );
 });
 

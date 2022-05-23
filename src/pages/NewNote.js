@@ -38,13 +38,17 @@ export default function NewNote() {
 		onSave();
 	});
 
+	console.log({ data });
+
 	return (
-        <Layout onSave={onSave}>
-            {/* <EditNote defaultValue={data.note} onChange={inputHandler} /> */}
-            <TipTapEditor
-                defaultValue={data.note}
-                onChange={inputHandler}
-            />
-        </Layout>
-    );
+		<Layout onSave={onSave}>
+			{/* <EditNote defaultValue={data.note} onChange={inputHandler} /> */}
+			{data.note && (
+				<TipTapEditor
+					defaultValue={data.note}
+					onChange={inputHandler}
+				/>
+			)}
+		</Layout>
+	);
 }

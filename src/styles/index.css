@@ -53,6 +53,7 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background-color: #f7f7f7;
+    font-size: 16px;
 }
 
 code {
@@ -107,7 +108,7 @@ header .wrapper {
     padding-right: 15px;
 }
 header .name {
-    font-size: 2.5rem;
+    font-size: 2rem;
     margin: 0;
     display: flex;
     align-items: center;
@@ -208,6 +209,9 @@ header .name .theme-switch {
 }
 
 main {
+    background-image: radial-gradient(rgb(207, 207, 207) 1px, transparent 0);
+    background-size: 20px 20px;
+
     position: relative;
     margin-top: var(--header-height);
 }
@@ -237,31 +241,6 @@ header.sticky+main.base-wrapper {
 
 .paper {
     position: relative;
-    background: -webkit-linear-gradient(
-            to top,
-            var(--editor-line-color) 0%,
-            var(--editor-line-bg) 5%
-        )
-        0 0;
-    background: -moz-linear-gradient(
-            to top,
-            var(--editor-line-color) 0%,
-            var(--editor-line-bg) 5%
-        )
-        0 0;
-    background: linear-gradient(
-            to top,
-            var(--editor-line-color) 0%,
-            var(--editor-line-bg) 5%
-        )
-        0 0;
-
-    -webkit-background-size: 100% 30px;
-    -moz-background-size: 100% 30px;
-    -ms-background-size: 100% 30px;
-    -o-background-size: 100% 30px;
-    background-size: 100% 30px;
-
     height: calc(100vh - 55px);
     overflow: hidden;
 }
@@ -296,11 +275,11 @@ header.sticky+main.base-wrapper {
 }
 .paper.tiptap {
     height: calc(100vh - 55px);
-    /* margin-top: 55px; */
+    margin-top: 55px;
+    width: calc(100% - 10px);
 }
 .paper.tiptap::before {
     height: 100vh;
-    /* margin-top: 55px; */
 }
 .paper.tiptap .editor {
     font-family: "Nunito", "Kalpurush", sans-serif;
@@ -310,10 +289,12 @@ header.sticky+main.base-wrapper {
     border: none;
     outline: none;
     background-color: transparent;
+    max-height: calc(100vh - 110px);
     min-height: 90vh;
     width: 100%;
-    padding: 50px;
-	padding-bottom: 10px;
+	padding-left: 50px;
+    padding-bottom: 15px;
+    padding-top: 10px;
     line-height: 30px;
 
     overflow-x: hidden;

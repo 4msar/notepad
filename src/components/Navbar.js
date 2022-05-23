@@ -67,12 +67,15 @@ export default function Navbar({ onSave, onDelete }) {
 	};
 
 	const switchTheme = () => {
-		toggleDarkMood((mood) => {
-			const theme = !mood === true ? "dark" : "light";
-			setTheme(theme);
-			// document.documentElement.setAttribute("data-theme", theme);
-			return !mood;
-		});
+		// FIXME: update the prose for dark mood
+		if (false) { // disabled for editor
+			toggleDarkMood((mood) => {
+				const theme = !mood === true ? "dark" : "light";
+				setTheme(theme);
+				// document.documentElement.setAttribute("data-theme", theme);
+				return !mood;
+			});
+		}
 	};
 
 	const menuActions = () => {
@@ -119,7 +122,7 @@ export default function Navbar({ onSave, onDelete }) {
 	};
 
 	return (
-		<header ref={menuRef} className="navbar sticky">
+		<header ref={menuRef} className="navbar">
 			<div className="wrapper base-wrapper">
 				<h1 className="name">
 					<Link title="Simple Note Taking Application..." to="/">

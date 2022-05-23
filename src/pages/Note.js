@@ -13,6 +13,14 @@ import { removeLastOpenId, setLastOpenId } from "../utils";
 import { decryptData } from "../utils/encryptions";
 import { debounce, isEmpty } from "../utils/functions";
 
+
+const parseNote = (note = '') => {
+    if (note.startsWith('<')) {
+        return note;
+    }
+    return `<p>${note}</p>`;
+}
+
 export default function Note() {
     const { note: noteId } = useParams();
     const {
@@ -93,11 +101,13 @@ export default function Note() {
 				readOnly={isReadOnly}
 				onChange={inputHandler}
 			/> */}
-            <TipTapEditor
-                defaultValue={data?.note ?? ""}
-                editable={isReadOnly}
-                onChange={inputHandler}
-            />
+            {data?.note && (
+                <TipTapEditor
+                    defaultValue={parseNote(data?.note || "")}
+                    editable={!isReadOnly}
+                    onChange={inputHandler}
+                />
+            )}
             {!isSaved && <UnSaveNotice onReset={handleSync} />}
         </Layout>
     );
