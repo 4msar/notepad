@@ -1,6 +1,7 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import EditNote from "../components/EditNote";
+// import EditNote from "../components/EditNote";
+import TipTapEditor from "../components/TipTapEditor";
 import Layout from "../components/Layout";
 import useHotKeys from "../hooks/useHotKeys";
 import useNote from "../hooks/useNote";
@@ -38,8 +39,12 @@ export default function NewNote() {
 	});
 
 	return (
-		<Layout onSave={onSave}>
-			<EditNote defaultValue={data.note} onChange={inputHandler} />
-		</Layout>
-	);
+        <Layout onSave={onSave}>
+            {/* <EditNote defaultValue={data.note} onChange={inputHandler} /> */}
+            <TipTapEditor
+                defaultValue={data.note}
+                onChange={inputHandler}
+            />
+        </Layout>
+    );
 }

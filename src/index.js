@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import { SnackbarProvider } from 'react-notistack';
 
 import "./styles/index.css";
+import "./styles/prose.css";
 import App from "./App";
 
 import reportWebVitals from "./reportWebVitals";
