@@ -225,7 +225,7 @@ export function arrayChunk(inputArray, chunk = 3) {
  * @return {Boolean}       [description]
  */
 export function isEmpty(value) {
-	if (typeof value === undefined || value === null || value === undefined) {
+	if (typeof value === 'undefined' || value === null || value === undefined) {
 		return true;
 	}
 	if (Array.isArray(value) && value.length <= 0) {

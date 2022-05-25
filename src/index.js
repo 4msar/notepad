@@ -1,26 +1,28 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from 'react-dom/client';
 import { SnackbarProvider } from 'react-notistack';
-
-import "./styles/index.css";
-import "./styles/prose.css";
 import App from "./App";
-
 import reportWebVitals from "./reportWebVitals";
 import * as serviceWorker from "./serviceWorkerRegistration";
+import "./styles/index.css";
+import "./styles/prose.css";
 
-ReactDOM.render(
-	<React.StrictMode>
-		<SnackbarProvider
-			anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-			autoHideDuration={5000}
-			preventDuplicate
-			maxSnack={3}
-		>
-			<App />
-		</SnackbarProvider>
-	</React.StrictMode>,
-	document.getElementById("root")
+
+
+
+const container = document.getElementById('root');
+const root = createRoot(container); // createRoot(container!) if you use TypeScript
+root.render(
+    <React.StrictMode>
+        <SnackbarProvider
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            autoHideDuration={5000}
+            preventDuplicate
+            maxSnack={3}
+        >
+            <App />
+        </SnackbarProvider>
+    </React.StrictMode>
 );
 
 // To enable offline compability register the SW

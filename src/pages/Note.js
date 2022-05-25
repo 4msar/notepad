@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import TipTapEditor from "../components/TipTapEditor";
 // import EditNote from "../components/EditNote";
 import Layout from "../components/Layout";
@@ -35,7 +35,7 @@ export default function Note() {
         syncNote,
         syncOnline,
     } = useNote(noteId);
-    const history = useHistory();
+    const navigate = useNavigate();
     const showSnackbar = useSnackbar();
 
     var urlParams = new URLSearchParams(window.location.search);
@@ -70,7 +70,7 @@ export default function Note() {
             setIsSaved(true);
             removeLastOpenId();
             showSnackbar("Note deleted successfully!", { variant: "warning" });
-            history.push(`/new`);
+            navigate(`/new`);
         }
     };
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link, useHistory, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import useHotKeys from "../hooks/useHotKeys";
 import { getTheme, setTheme } from "../utils";
 import { decryptData } from "../utils/encryptions";
@@ -11,7 +11,7 @@ import {
 import { Sun, Moon, Menu } from "./Icons";
 
 export default function Navbar({ onSave, onDelete }) {
-	const history = useHistory();
+	const navigate = useNavigate();
 	const { note } = useParams();
 	const [isMobile, setIsMobile] = useState(window.innerWidth <= 425);
 	const [menuOpen, toggleMenu] = useState(false);
@@ -23,13 +23,13 @@ export default function Navbar({ onSave, onDelete }) {
 		toggleMenu(false);
 		if (!isEmpty(id)) {
 			const noteId = generateNoteId(id);
-			history.push(`/n/${noteId}${generateNoteIdWithToken(id)}`);
+			navigate(`/n/${noteId}${generateNoteIdWithToken(id)}`);
 		}
 	};
 
 	useHotKeys(["ctrl", "n", "cmd", "n"], (event) => {
 		console.log(event);
-		history.push("/new");
+		navigate("/new");
 	});
 	useHotKeys(["ctrl", "o", "cmd", "o"], handleOpen);
 
@@ -63,7 +63,7 @@ export default function Navbar({ onSave, onDelete }) {
 	}, [isDarkMood]);
 
 	const onNewClick = () => {
-		history.push("/new");
+		navigate("/new");
 	};
 
 	const switchTheme = () => {
