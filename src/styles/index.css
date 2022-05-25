@@ -68,6 +68,8 @@ a {
 
 .App {
     overflow: hidden;
+    background-image: radial-gradient(#ece7e0 2px, transparent 0);
+    background-size: 20px 20px;
 }
 
 .flex-center {
@@ -96,6 +98,8 @@ header {
     top: 0;
     z-index: 9999;
     box-shadow: 0px 1px 12px var(--header-shadow-bg);
+    display: flex;
+    align-items: center;
 }
 header.sticky {
     position: sticky;
@@ -106,6 +110,7 @@ header .wrapper {
     align-items: center;
     padding-left: 15px;
     padding-right: 15px;
+    width: 100%;
 }
 header .name {
     font-size: 2rem;
@@ -209,8 +214,8 @@ header .name .theme-switch {
 }
 
 main {
-    background-image: radial-gradient(rgb(207, 207, 207) 1px, transparent 0);
-    background-size: 20px 20px;
+    /* background-image: radial-gradient(rgb(207, 207, 207) 1px, transparent 0);
+    background-size: 20px 20px; */
 
     position: relative;
     margin-top: var(--header-height);
@@ -277,6 +282,7 @@ header.sticky+main.base-wrapper {
     height: calc(100vh - 55px);
     margin-top: 55px;
     width: calc(100% - 10px);
+    /* background-color: rgb(255 189 85 / 10%); */
 }
 .paper.tiptap::before {
     height: 100vh;
@@ -289,6 +295,7 @@ header.sticky+main.base-wrapper {
     border: none;
     outline: none;
     background-color: transparent;
+    position: fixed;
     max-height: calc(100vh - 110px);
     min-height: 90vh;
     width: 100%;

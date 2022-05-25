@@ -18,7 +18,10 @@ const parseNote = (note = '') => {
     if (note.startsWith('<')) {
         return note;
     }
-    return `<p>${note}</p>`;
+    return `${note}`
+              .split("\n\n")
+              .map((item) => `<p>${item}</p>`)
+              .join("");
 }
 
 export default function Note() {

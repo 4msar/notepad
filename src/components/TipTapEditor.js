@@ -7,7 +7,7 @@ const TipTapEditor = forwardRef(({ defaultValue, onChange, ...props }, ref) => {
     const { note } = useParams();
     const editor = useEditor({
         extensions: [StarterKit],
-        content: defaultValue ?? "",
+        content: defaultValue,
         autofocus: true,
         onUpdate: ({ editor }) => {
             const editorContent = editor.getHTML();
@@ -24,25 +24,19 @@ const TipTapEditor = forwardRef(({ defaultValue, onChange, ...props }, ref) => {
         ...props,
     });
 
-    // useEffect(() => {
-    //     if (editor?.commandManager?.editor?.commands) {
-    //         editor.commandManager.editor.commands.setContent(defaultValue);
-    //     }
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [defaultValue]);
-
     useEffect(() => {
-        if (editor?.commandManager?.editor?.commands) {
+        if (editor?.commandManager?.editor?.commands && defaultValue) {
             editor.commandManager.editor.commands.setContent(defaultValue);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [note])
+    }, [note]);
+
+    // console.log({note, defaultValue});
 
     return (
         <EditorContent
             ref={ref}
             className="paper tiptap"
-            value={defaultValue}
             editor={editor}
         />
     );
