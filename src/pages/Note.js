@@ -19,9 +19,9 @@ const parseNote = (note = '') => {
         return note;
     }
     return `${note}`
-              .split("\n\n")
-              .map((item) => `<p>${item}</p>`)
-              .join("");
+        .split("\n\n")
+        .map((item) => `<p>${item}</p>`)
+        .join("");
 }
 
 export default function Note() {
@@ -99,18 +99,13 @@ export default function Note() {
 
     return (
         <Layout onSave={onSave} onDelete={onDelete}>
-            {/* <EditNote
-				defaultValue={data?.note ?? ""}
-				readOnly={isReadOnly}
-				onChange={inputHandler}
-			/> */}
-            {data?.note && (
-                <TipTapEditor
-                    defaultValue={parseNote(data?.note || "")}
-                    editable={!isReadOnly}
-                    onChange={inputHandler}
-                />
-            )}
+            <TipTapEditor
+                noteId={noteId}
+                data={data}
+                defaultValue={parseNote(data?.note || "")}
+                editable={!isReadOnly}
+                onChange={inputHandler}
+            />
             {!isSaved && <UnSaveNotice onReset={handleSync} />}
         </Layout>
     );

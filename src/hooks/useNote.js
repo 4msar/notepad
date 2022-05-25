@@ -7,7 +7,7 @@ import useLocalStorage from "./useLocalStorage";
 
 const useNote = (id) => {
 	const tempKey = createLocalNoteId(id);
-	const { data, saveData } = useLocalStorage(tempKey, INITIAL_NOTE);
+	const [data, saveData] = useLocalStorage(tempKey, INITIAL_NOTE);
 	const [onlineNote, setOnlineNote] = useState(data);
 
 	const [isSaved, setIsSaved] = useState(
@@ -16,12 +16,12 @@ const useNote = (id) => {
 
 	const syncNote = (noteId = null) => {
 		const key = generateNoteId(noteId ?? id);
-		const savedData = { ...data, editedAt: new Date().getTime() + 10 };
+		const savedData = { ...data, key, editedAt: new Date().getTime() + 10 };
 		NoteService.updateOrCreate(key, savedData);
 		return key;
 	};
 
-	const syncOnline = (noteId = null) => {
+	const syncOnline = (noteId = id) => {
 		NoteService.getItem(noteId ?? id, (note) => {
 			if (isEmpty(note)) {
 				return false;

@@ -1,5 +1,6 @@
 export const INITIAL_NOTE = {
 	note: "",
+	key: "",
 	editedAt: new Date().getTime(),
 };
 
