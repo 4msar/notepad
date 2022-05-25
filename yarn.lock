@@ -10308,10 +10308,10 @@ react-is@^18.0.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.1.0.tgz#61aaed3096d30eacf2a2127118b5b41387d32a67"
   integrity sha512-Fl7FuabXsJnV5Q1qIOQwx/sagGF18kogb4gpfcG4gjLBWO0WDiiz1ko/ExayuxE7InyQkBLkxRFG5oxY6Uu3Kg==
 
-react-notistack@^1.2.3:
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/react-notistack/-/react-notistack-1.2.3.tgz#47a1045f1cae8aac37f14a150e4a811b20dc8773"
-  integrity sha512-HWH5CHLfCJTY1vmzRxspKuaXP49IokIEWjI51HQWkIdjYe7VZ99CbhbsiXvxA/j1IBR1RkDyYCPnXG6kK8fjdQ==
+react-notistack@^1.3.03:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/react-notistack/-/react-notistack-1.3.0.tgz#fbcf7d0e46975b7e4896f114d54019acebb185a7"
+  integrity sha512-0c6E7NZBGhwVfmkxE18aFFvyt6PPn2jQp7wZLyyYupEhSoLprAuons8MqXNK3JakKA7G21T/fNhJpKJrHSUaYw==
 
 react-refresh@^0.11.0:
   version "0.11.0"
