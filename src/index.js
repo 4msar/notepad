@@ -7,9 +7,6 @@ import * as serviceWorker from "./serviceWorkerRegistration";
 import "./styles/index.css";
 import "./styles/prose.css";
 
-
-
-
 const container = document.getElementById('root');
 const root = createRoot(container); // createRoot(container!) if you use TypeScript
 root.render(
@@ -25,7 +22,7 @@ root.render(
     </React.StrictMode>
 );
 
-// To enable offline compability register the SW
+// To enable offline compatibility register the SW
 serviceWorker.register();
 
 // If you want to start measuring performance in your app, pass a function
