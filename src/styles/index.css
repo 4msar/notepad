@@ -308,6 +308,40 @@ header.sticky+main.base-wrapper {
     overflow-y: auto;
 }
 
+.last-note {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    max-width: 50vw;
+    width: auto;
+    margin: 0 auto;
+    background-color: var(--color-warning);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: 5px 10px;
+    color: var(--text-color);
+    font-weight: 800;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.last-note-buttons {
+    display: flex;
+    align-items: center;
+}
+a.last-note-button {
+    text-decoration: underline;
+}
+.last-note-button {
+    color: var(--text-color);
+    cursor: pointer;
+    margin-left: 10px;
+}
+.mobile.last-note-title {
+    display: none;
+}
+
 @media (max-width: 768px) {
     header .wrapper {
         padding-left: 30px;
@@ -332,5 +366,14 @@ header.sticky+main.base-wrapper {
     }
     .__snackbar_container .snack {
         width: 300px !important;
+    }
+    .last-note {
+        max-width: 75vw;
+    }
+    .mobile.last-note-title {
+        display: flex;
+    }
+    .last-note-title {
+        display: none;
     }
 }

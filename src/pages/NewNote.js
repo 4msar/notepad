@@ -1,10 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import LastOpenNotePrompt from "../components/LastOpenNotePrompt";
 import Layout from "../components/Layout";
 // import EditNote from "../components/EditNote";
 import TipTapEditor from "../components/TipTapEditor";
 import useHotKeys from "../hooks/useHotKeys";
-import { useLastOpenNote } from "../hooks/useLastOpenNote";
 import useNote from "../hooks/useNote";
 import useUnload from "../hooks/useUnload";
 import { encryptData } from "../utils/encryptions";
@@ -13,7 +13,7 @@ import { debounce, isEmpty } from "../utils/functions";
 export default function NewNote() {
 	const { data, saveData, syncNote } = useNote();
 	const navigate = useNavigate();
-	useLastOpenNote();
+
 
 	useUnload(!isEmpty(data?.note));
 
@@ -50,6 +50,8 @@ export default function NewNote() {
 					onChange={inputHandler}
 				/>
 			)}
+
+			<LastOpenNotePrompt />
 
 		</Layout>
 	);
