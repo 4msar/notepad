@@ -13,7 +13,7 @@ import { debounce, isEmpty } from "../utils/functions";
 export default function NewNote() {
 	const { data, saveData, syncNote } = useNote();
 	const navigate = useNavigate();
-
+	console.log({ data });
 
 	useUnload(!isEmpty(data?.note));
 
@@ -44,10 +44,11 @@ export default function NewNote() {
 		<Layout onSave={onSave}>
 			{/* <EditNote defaultValue={data.note} onChange={inputHandler} /> */}
 
-			{data?.note && (
+			{data?.editedAt && (
 				<TipTapEditor
 					defaultValue={data?.note || ''}
 					onChange={inputHandler}
+					autofocus={true}
 				/>
 			)}
 

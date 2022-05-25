@@ -7,7 +7,7 @@ import useLocalStorage from "./useLocalStorage";
 
 const useNote = (id) => {
 	const tempKey = createLocalNoteId(id);
-	const { data, saveData } = useLocalStorage(tempKey, INITIAL_NOTE);
+	const [data, saveData] = useLocalStorage(tempKey, INITIAL_NOTE);
 	const [onlineNote, setOnlineNote] = useState(data);
 
 	const [isSaved, setIsSaved] = useState(

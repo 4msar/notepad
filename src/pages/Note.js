@@ -19,9 +19,9 @@ const parseNote = (note = '') => {
         return note;
     }
     return `${note}`
-              .split("\n\n")
-              .map((item) => `<p>${item}</p>`)
-              .join("");
+        .split("\n\n")
+        .map((item) => `<p>${item}</p>`)
+        .join("");
 }
 
 export default function Note() {
@@ -104,9 +104,11 @@ export default function Note() {
 				readOnly={isReadOnly}
 				onChange={inputHandler}
 			/> */}
-            {data?.note && (
+            {data?.editedAt && (
                 <TipTapEditor
+                    data={data}
                     defaultValue={parseNote(data?.note || "")}
+                    shouldUpdate={data.editedAt}
                     editable={!isReadOnly}
                     onChange={inputHandler}
                 />
