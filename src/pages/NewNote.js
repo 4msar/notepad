@@ -1,6 +1,7 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
-import EditNote from "../components/EditNote";
+import { useNavigate } from "react-router-dom";
+// import EditNote from "../components/EditNote";
+import TipTapEditor from "../components/TipTapEditor";
 import Layout from "../components/Layout";
 import useHotKeys from "../hooks/useHotKeys";
 import useNote from "../hooks/useNote";
@@ -10,7 +11,7 @@ import { debounce, isEmpty } from "../utils/functions";
 
 export default function NewNote() {
 	const { data, saveData, syncNote } = useNote();
-	const history = useHistory();
+	const navigate = useNavigate();
 
 	useUnload(!isEmpty(data?.note));
 
@@ -20,7 +21,7 @@ export default function NewNote() {
 		prompt("Here is your note link:\n", url.toString());
 		if (noteId) {
 			const token = encryptData(noteId);
-			history.push(`/n/${noteId}?token=${token}`);
+			navigate(`/n/${noteId}?token=${token}`);
 		}
 	};
 
@@ -37,9 +38,17 @@ export default function NewNote() {
 		onSave();
 	});
 
+	console.log({ data });
+
 	return (
 		<Layout onSave={onSave}>
-			<EditNote defaultValue={data.note} onChange={inputHandler} />
+			{/* <EditNote defaultValue={data.note} onChange={inputHandler} /> */}
+			{!isEmpty(data.note) && (
+				<TipTapEditor
+					defaultValue={data.note}
+					onChange={inputHandler}
+				/>
+			)}
 		</Layout>
 	);
 }

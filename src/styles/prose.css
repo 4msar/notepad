@@ -1,0 +1,66 @@
+.ProseMirror > * + * {
+    font-family: "Nunito", "Kalpurush", sans-serif;
+    margin-top: 0.75em;
+}
+.ProseMirror ul,
+.ProseMirror ol {
+    padding: 0 1rem;
+}
+.ProseMirror h1,
+.ProseMirror h2,
+.ProseMirror h3,
+.ProseMirror h4,
+.ProseMirror h5,
+.ProseMirror h6 {
+    line-height: 1.1;
+}
+.ProseMirror code {
+    background-color: rgba(97, 97, 97, 0.1);
+    color: #616161;
+}
+.ProseMirror pre {
+    width: fit-content;
+    max-width: calc(var(--max-container-width) - 150px);
+    background: #2c3140;
+    color: #fff;
+    font-family: "Console", monospace;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    margin-right: 5rem;
+}
+.ProseMirror pre code {
+    color: inherit;
+    padding: 0;
+    background: none;
+    font-size: 0.8rem;
+}
+.ProseMirror img {
+    max-width: 100%;
+    height: auto;
+}
+.ProseMirror hr {
+    margin: 1rem 0;
+}
+.ProseMirror blockquote {
+    position: relative;
+    padding-left: 1rem;
+    border-left: 2px solid rgba(13, 13, 13, 0.2);
+}
+.ProseMirror blockquote::before {
+    top: 0px;
+    left: 5px;
+    color: rgba(13, 13, 13, 0.2);
+    content: "“";
+    z-index: 1;
+    position: absolute;
+    font-size: 25px;
+    font-weight: bold;
+    line-height: 0.62;
+    letter-spacing: -0.8px;
+}
+
+@media (max-width: 768px) {
+    .ProseMirror pre {
+        margin-right: 3rem;
+    }
+}
