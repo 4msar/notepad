@@ -1,18 +1,18 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Home from "./pages/Home";
+import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-dom";
 import NewNote from "./pages/NewNote";
 import Note from "./pages/Note";
 
 function App() {
-	
 	return (
 		<Router>
 			<Routes>
-				<Route path="/" exact element={<Home/>} />
-				<Route path="/new" exact element={<NewNote/>} />
-				<Route path="/n/:note" exact element={<Note/>} />
-				<Route element={<Home/>} />
+				<Route
+					path="*"
+					element={<Navigate to="/new" />}
+				/>
+				<Route path="/new" exact element={<NewNote />} />
+				<Route path="/n/:note" exact element={<Note />} />
 			</Routes>
 		</Router>
 	);

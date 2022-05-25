@@ -19,6 +19,8 @@ export default function Home() {
 		}
 	}, [navigate, lastId]);
 
+	console.log('Home', { lastId });
+
 	return (
 		<Layout>
 			<div className="flex-center loading">Loading...</div>
