@@ -33,3 +33,12 @@ const EditNote = forwardRef(({ defaultValue, onChange, ...props }, ref) => {
 });
 
 export default EditNote;
+
+/*
+usage: 
+<EditNote
+	defaultValue={data?.note ?? ""}
+	readOnly={isReadOnly}
+	onChange={inputHandler}
+/> 
+*/

@@ -1,9 +1,9 @@
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { forwardRef, useCallback, useEffect } from "react";
+import { forwardRef } from "react";
 import { useParams } from "react-router-dom";
 
-const TipTapEditor = forwardRef(({ shouldUpdate, defaultValue, onChange, ...props }, ref) => {
+const TipTapEditor = forwardRef(({ defaultValue, onChange, noteId, data, ...props }, ref) => {
     const { note } = useParams();
     const editor = useEditor({
         extensions: [StarterKit],
@@ -22,18 +22,9 @@ const TipTapEditor = forwardRef(({ shouldUpdate, defaultValue, onChange, ...prop
             },
         },
         ...props,
-    });
-
-    const setEditorContent = useCallback((content) => {
-        if (editor?.commandManager?.editor?.commands && content) {
-            editor.commandManager.editor.commands.setContent(content);
-        }
-    }, [shouldUpdate]);
-
-    useEffect(() => {
-        setEditorContent(defaultValue);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [note]);
+
+    // console.log({ note, defaultValue, noteId, data });
 
     return (
         <EditorContent

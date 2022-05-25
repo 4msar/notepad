@@ -99,20 +99,13 @@ export default function Note() {
 
     return (
         <Layout onSave={onSave} onDelete={onDelete}>
-            {/* <EditNote
-				defaultValue={data?.note ?? ""}
-				readOnly={isReadOnly}
-				onChange={inputHandler}
-			/> */}
-            {data?.editedAt && (
-                <TipTapEditor
-                    data={data}
-                    defaultValue={parseNote(data?.note || "")}
-                    shouldUpdate={data.editedAt}
-                    editable={!isReadOnly}
-                    onChange={inputHandler}
-                />
-            )}
+            <TipTapEditor
+                noteId={noteId}
+                data={data}
+                defaultValue={parseNote(data?.note || "")}
+                editable={!isReadOnly}
+                onChange={inputHandler}
+            />
             {!isSaved && <UnSaveNotice onReset={handleSync} />}
         </Layout>
     );

@@ -2,7 +2,6 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import LastOpenNotePrompt from "../components/LastOpenNotePrompt";
 import Layout from "../components/Layout";
-// import EditNote from "../components/EditNote";
 import TipTapEditor from "../components/TipTapEditor";
 import useHotKeys from "../hooks/useHotKeys";
 import useNote from "../hooks/useNote";
@@ -13,7 +12,6 @@ import { debounce, isEmpty } from "../utils/functions";
 export default function NewNote() {
 	const { data, saveData, syncNote } = useNote();
 	const navigate = useNavigate();
-	console.log({ data });
 
 	useUnload(!isEmpty(data?.note));
 
@@ -23,7 +21,7 @@ export default function NewNote() {
 		prompt("Here is your note link:\n", url.toString());
 		if (noteId) {
 			const token = encryptData(noteId);
-			navigate(`/n/${noteId}?token=${token}`);
+			navigate(`/n/${noteId}?token=${token}`, { replace: true });
 		}
 	};
 
@@ -42,15 +40,12 @@ export default function NewNote() {
 
 	return (
 		<Layout onSave={onSave}>
-			{/* <EditNote defaultValue={data.note} onChange={inputHandler} /> */}
-
-			{data?.editedAt && (
-				<TipTapEditor
-					defaultValue={data?.note || ''}
-					onChange={inputHandler}
-					autofocus={true}
-				/>
-			)}
+			<TipTapEditor
+				data={data}
+				defaultValue={data?.note || ''}
+				onChange={inputHandler}
+				autofocus={true}
+			/>
 
 			<LastOpenNotePrompt />
 
