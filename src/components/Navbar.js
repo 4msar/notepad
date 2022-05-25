@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import useHotKeys from "../hooks/useHotKeys";
-import { getTheme, setTheme } from "../utils";
+import { getTheme, removeLocalNote, setTheme } from "../utils";
 import { decryptData } from "../utils/encryptions";
 import {
 	generateNoteId,
@@ -68,6 +68,7 @@ export default function Navbar({ onSave, onDelete }) {
 	}, [isDarkMood]);
 
 	const onNewClick = () => {
+		removeLocalNote();
 		navigate("/new");
 	};
 
