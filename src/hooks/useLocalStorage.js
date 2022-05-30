@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
-import { getLocalData } from "../utils";
+import { useState } from "react";
 import { LOCAL_NOTES } from "../utils/constant";
 
 export default function useLocalStorage(key = LOCAL_NOTES, initialValue = "") {

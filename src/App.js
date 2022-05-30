@@ -1,8 +1,8 @@
 import React from "react";
-import Note from "./pages/Note";
+import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-dom";
 import NewNote from "./pages/NewNote";
+import Note from "./pages/Note";
 import RedirectToNote from "./pages/RedirectToNote";
-import { BrowserRouter as Router, Navigate, Route, Routes, useParams } from "react-router-dom";
 
 function App() {
 	return (

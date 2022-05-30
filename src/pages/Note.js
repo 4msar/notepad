@@ -13,24 +13,11 @@ import { removeLastOpenId, setLastOpenId } from "../utils";
 import { decryptData } from "../utils/encryptions";
 import { debounce, isEmpty } from "../utils/functions";
 
-
-const parseNote = (note = '') => {
-    if (note.startsWith('<')) {
-        return note;
-    }
-    return `${note}`
-        .split("\n\n")
-        .map((item) => `<p>${item}</p>`)
-        .join("");
-}
-
 export default function Note() {
     const { note: noteId } = useParams();
     const {
         data,
-        syncedData,
         isSaved,
-        setIsSaved,
         saveData,
         syncNote,
         syncOnline,
@@ -47,7 +34,6 @@ export default function Note() {
     const onSave = () => {
         syncNote(noteId);
         showSnackbar("Note sync successfully!", { variant: "success" });
-        setIsSaved(true);
     };
     const handleSync = () => {
         syncOnline();
@@ -67,7 +53,6 @@ export default function Note() {
         if (confirmed) {
             NoteService.delete(noteId);
             saveData("");
-            setIsSaved(true);
             removeLastOpenId();
             showSnackbar("Note deleted successfully!", { variant: "warning" });
             navigate(`/new`);
@@ -79,7 +64,6 @@ export default function Note() {
             target: { value },
         } = event;
         saveData({ editedAt: new Date().getTime(), note: value });
-        setIsSaved(false);
     };
     const inputHandler = debounce(inputChange, 1000);
 
@@ -92,17 +76,10 @@ export default function Note() {
         setLastOpenId(noteId);
     }, [noteId]);
 
-    useEffect(() => {
-        setIsSaved(data?.editedAt <= syncedData?.editedAt);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [syncedData]);
-
     return (
         <Layout onSave={onSave} onDelete={onDelete}>
             <TipTapEditor
-                noteId={noteId}
                 data={data}
-                defaultValue={parseNote(data?.note || "")}
                 editable={!isReadOnly}
                 onChange={inputHandler}
             />

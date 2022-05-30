@@ -39,16 +39,14 @@ export default function NewNote() {
 	});
 
 	return (
-		<Layout onSave={onSave}>
-			<TipTapEditor
-				data={data}
-				defaultValue={data?.note || ''}
-				onChange={inputHandler}
-				autofocus={true}
-			/>
+        <Layout onSave={onSave}>
+            <TipTapEditor
+                data={data}
+                onChange={inputHandler}
+                autofocus={true}
+            />
 
-			<LastOpenNotePrompt />
-
-		</Layout>
-	);
+            <LastOpenNotePrompt />
+        </Layout>
+    );
 }
