@@ -1,22 +1,23 @@
+import { EditorContent } from "@tiptap/react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import LastOpenNotePrompt from "../components/LastOpenNotePrompt";
 import Layout from "../components/Layout";
-import TipTapEditor from "../components/TipTapEditor";
 import useHotKeys from "../hooks/useHotKeys";
 import useNote from "../hooks/useNote";
+import useNoteEditor from "../hooks/useNoteEditor";
 import useUnload from "../hooks/useUnload";
 import { encryptData } from "../utils/encryptions";
-import { debounce, isEmpty } from "../utils/functions";
+import { isEmpty } from "../utils/functions";
 
 export default function NewNote() {
-	const { data, saveData, syncNote } = useNote();
+	const { onlineNote: data, saveNote, saveToOnline } = useNote();
 	const navigate = useNavigate();
 
 	useUnload(!isEmpty(data?.note));
 
 	const onSave = () => {
-		const noteId = syncNote();
+		const noteId = saveToOnline();
 		const url = new URL(`${window.location.origin}/n/${noteId}`);
 		prompt("Here is your note link:\n", url.toString());
 		if (noteId) {
@@ -25,27 +26,27 @@ export default function NewNote() {
 		}
 	};
 
-	const inputChange = (event) => {
-		const {
-			target: { value },
-		} = event;
-		saveData({ editedAt: new Date().getTime(), note: value });
-	};
-	const inputHandler = debounce(inputChange, 1000);
-
 	useHotKeys(["ctrl", "cmd", "s"], () => {
 		console.log("Saved by Keyboard Shortcut.");
 		onSave();
 	});
 
+	const editor = useNoteEditor(
+        {
+            text: data.note,
+            onChange: (value) => {
+                saveNote({
+                    editedAt: new Date().getTime(),
+                    note: value,
+                });
+            },
+        },
+        []
+    );
+
 	return (
         <Layout onSave={onSave}>
-            <TipTapEditor
-                data={data}
-                onChange={inputHandler}
-                autofocus={true}
-            />
-
+            <EditorContent className="paper tiptap" editor={editor} />
             <LastOpenNotePrompt />
         </Layout>
     );

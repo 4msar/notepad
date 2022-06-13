@@ -23,7 +23,7 @@ export default function Navbar({ onSave, onDelete }) {
 		toggleMenu(false);
 		if (!isEmpty(id)) {
 			const noteId = generateNoteId(id);
-			navigate(`/redirect/${noteId}${generateNoteIdWithToken(id)}`, {
+			navigate(`/n/${noteId}${generateNoteIdWithToken(id)}`, {
 				state: {
 					noteId,
 				},

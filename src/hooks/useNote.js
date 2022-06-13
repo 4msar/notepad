@@ -1,5 +1,5 @@
 import { onValue, ref, update } from "firebase/database";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import NoteService from "../services/NoteService";
 import { createLocalNoteId, getLocalData } from "../utils";
 import { INITIAL_NOTE } from "../utils/constant";
@@ -11,13 +11,14 @@ const getRef = (rest = "") => "public-notes/" + rest;
 
 const useNote = (id) => {
     const tempKey = createLocalNoteId(id);
-    const [data, saveData] = useLocalStorage(tempKey, INITIAL_NOTE);
+    const [note, saveNote] = useLocalStorage(tempKey, INITIAL_NOTE);
+    const [onlineNote, setOnlineNote] = useState(note);
     const isSaved = useRef(true);
 
-    const syncNote = (noteId = null) => {
+    const saveToOnline = (noteId = null) => {
         const key = generateNoteId(noteId ?? id);
         const savedData = { 
-            ...data, 
+            ...note, 
             key, 
             syncAt: new Date().getTime(), 
             editedAt: new Date().getTime() + 10
@@ -31,19 +32,20 @@ const useNote = (id) => {
 		return key;
     };
 
-    const syncOnline = (noteId = id) => {
+    const resetWithOnline = (noteId = id) => {
         NoteService.getItem(noteId ?? id, (note) => {
             if (isEmpty(note)) {
                 return false;
             }
 
-            saveData(note);
+            saveNote(note);
+            setOnlineNote(note);
             isSaved.current = true;
         });
     };
 
     const saveLocalData = (param) => {
-        saveData(param);
+        saveNote(param);
         isSaved.current = false;
     }
 
@@ -57,14 +59,15 @@ const useNote = (id) => {
                     if (isEmpty(note)) {
                         return false;
                     }
+                    setOnlineNote(note);
 
                     const localData = getLocalData(id);
                     if (isEmpty(localData?.note)) {
-                        saveData(note);
+                        saveNote(note);
                         isSaved.current = true;
                     }
                     if (localData?.editedAt <= note?.editedAt) {
-                        saveData(note);
+                        saveNote(note);
                     }
                 },
                 (error) => {
@@ -76,11 +79,12 @@ const useNote = (id) => {
     }, [id]);
 
     return {
-        data,
+        note,
+        onlineNote,
         isSaved: isSaved.current,
-        saveData: saveLocalData,
-        syncNote,
-        syncOnline,
+        saveNote: saveLocalData,
+        saveToOnline,
+        resetWithOnline,
     };
 };
 

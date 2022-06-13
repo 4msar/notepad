@@ -1,27 +1,21 @@
+import { EditorContent } from "@tiptap/react";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import TipTapEditor from "../components/TipTapEditor";
-// import EditNote from "../components/EditNote";
 import Layout from "../components/Layout";
 import UnSaveNotice from "../components/UnSaveNotice";
 import useHotKeys from "../hooks/useHotKeys";
 import useNote from "../hooks/useNote";
+import useNoteEditor from "../hooks/useNoteEditor";
 import useSnackbar from "../hooks/useSnackbar";
 import useUnload from "../hooks/useUnload";
 import NoteService from "../services/NoteService";
 import { removeLastOpenId, setLastOpenId } from "../utils";
 import { decryptData } from "../utils/encryptions";
-import { debounce, isEmpty } from "../utils/functions";
+import { isEmpty } from "../utils/functions";
 
 export default function Note() {
     const { note: noteId } = useParams();
-    const {
-        data,
-        isSaved,
-        saveData,
-        syncNote,
-        syncOnline,
-    } = useNote(noteId);
+    const { onlineNote: data, isSaved, saveNote, saveToOnline, resetWithOnline } = useNote(noteId);
     const navigate = useNavigate();
     const showSnackbar = useSnackbar();
 
@@ -32,12 +26,10 @@ export default function Note() {
     useUnload(!isSaved);
 
     const onSave = () => {
-        syncNote(noteId);
+        saveToOnline(noteId);
         showSnackbar("Note sync successfully!", { variant: "success" });
     };
-    const handleSync = () => {
-        syncOnline();
-    };
+    
     const onDelete = () => {
         const decryptedToken = !isEmpty(encryptedToken)
             ? decryptData(encryptedToken ?? "")
@@ -52,20 +44,12 @@ export default function Note() {
         const confirmed = confirm("Are you sure?");
         if (confirmed) {
             NoteService.delete(noteId);
-            saveData("");
+            saveNote("");
             removeLastOpenId();
             showSnackbar("Note deleted successfully!", { variant: "warning" });
             navigate(`/new`);
         }
     };
-
-    const inputChange = (event) => {
-        const {
-            target: { value },
-        } = event;
-        saveData({ editedAt: new Date().getTime(), note: value });
-    };
-    const inputHandler = debounce(inputChange, 1000);
 
     useHotKeys(["ctrl", "cmd", "s"], () => {
         console.log("Saved by Keyboard Shortcut.");
@@ -76,14 +60,24 @@ export default function Note() {
         setLastOpenId(noteId);
     }, [noteId]);
 
+    const editor = useNoteEditor(
+        {
+            text: data.note,
+            isReadOnly,
+            onChange: (value) => {
+                saveNote({
+                    editedAt: new Date().getTime(),
+                    note: value,
+                });
+            },
+        },
+        [noteId]
+    );
+
     return (
         <Layout onSave={onSave} onDelete={onDelete}>
-            <TipTapEditor
-                data={data}
-                editable={!isReadOnly}
-                onChange={inputHandler}
-            />
-            {!isSaved && <UnSaveNotice onReset={handleSync} />}
+            <EditorContent className="paper tiptap" editor={editor} />
+            {!isSaved && <UnSaveNotice onReset={resetWithOnline} />}
         </Layout>
     );
 }

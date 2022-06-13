@@ -316,6 +316,16 @@ export function replaceUndefinied(item) {
 	return JSON.parse(str);
 }
 
+export const parseNote = (note = "") => {
+    if (note.startsWith("<")) {
+        return note;
+    }
+    return `${note}`
+        .split("\n\n")
+        .map((item) => `<p>${item}</p>`)
+        .join("");
+};
+
 export function generateNoteId(noteId = '') {
 	let id = noteId;
 	if (id.startsWith("msar-")) {
