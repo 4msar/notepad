@@ -17,19 +17,21 @@ const useNote = (id) => {
 
     const saveToOnline = (noteId = null) => {
         const key = generateNoteId(noteId ?? id);
-        const savedData = { 
-            ...note, 
-            key, 
-            syncAt: new Date().getTime(), 
-            editedAt: new Date().getTime() + 10
+        const savedData = {
+            ...note,
+            key,
+            syncAt: new Date().getTime(),
+            editedAt: new Date().getTime() + 10,
         };
-        
+
         if (!key) return false;
-		const updates = {};
-		updates[getRef(key)] = savedData;
-		update(ref(db), updates);
+
+        const updates = {};
+        updates[getRef(key)] = savedData;
+        update(ref(db), updates);
         isSaved.current = true;
-		return key;
+
+        return key;
     };
 
     const resetWithOnline = (noteId = id) => {
@@ -47,7 +49,7 @@ const useNote = (id) => {
     const saveLocalData = (param) => {
         saveNote(param);
         isSaved.current = false;
-    }
+    };
 
     useEffect(() => {
         if (!isEmpty(id)) {

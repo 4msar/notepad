@@ -1,7 +1,18 @@
+/**
+ * Data Model
+ *
+ * editedAt: 1675078396832
+ * key: "note-temp"
+ * note: "html content"
+ * syncAt: 1675078396822
+ * encrypted: true
+ */
 export const INITIAL_NOTE = {
     note: "",
     key: "",
+    encrypted: false,
     editedAt: new Date().getTime(),
+    syncAt: null,
 };
 
 export const LAST_NOTE_ID = "__note_app__last__open__note__id__";

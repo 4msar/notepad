@@ -4,6 +4,16 @@ import { database as db } from "../utils/firebase";
 
 const getRef = (rest = "") => "public-notes/" + rest;
 
+/**
+ * Data Model
+ *
+ * editedAt: 1675078396832
+ * key: "note-temp"
+ * note: "html content"
+ * syncAt: 1675078396822
+ * encrypted: true
+ */
+
 class NoteService {
     encryption() {
         return {
@@ -74,3 +84,7 @@ class NoteService {
 }
 
 export default new NoteService();
+
+if (process.env.NODE_ENV === "development") {
+    window.NoteService = new NoteService();
+}
