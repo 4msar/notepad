@@ -1,38 +1,46 @@
-import React, { forwardRef, useEffect, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 
-const EditNote = forwardRef(({ defaultValue, onChange, ...props }, ref) => {
-	const [value, setValue] = useState(defaultValue ?? "");
+type EditNoteProps = {
+    defaultValue: string;
+    onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+    readOnly?: boolean;
+};
 
-	useEffect(() => {
-		setValue(defaultValue);
-	}, [defaultValue]);
+export const EditNote = forwardRef<HTMLTextAreaElement, EditNoteProps>(
+    ({ defaultValue = "", onChange, ...props }, ref) => {
+        const [value, setValue] = useState<string>(defaultValue ?? "");
 
-	const handleChange = (event) => {
-		const {
-			target: { value },
-		} = event;
-		setValue(value);
-		if (typeof onChange === "function") {
-			onChange(event);
-		}
-	};
+        useEffect(() => {
+            setValue(defaultValue);
+        }, [defaultValue]);
 
-	return (
-		<section className="paper">
-			<textarea
-				autoFocus
-				type="text"
-				placeholder="Type your note here"
-				value={value}
-				onChange={handleChange}
-				{...props}
-				ref={ref}
-			></textarea>
-		</section>
-	);
-});
+        const handleChange = (
+            event: React.ChangeEvent<HTMLTextAreaElement>
+        ) => {
+            const {
+                target: { value },
+            } = event;
+            setValue(value);
+            if (typeof onChange === "function") {
+                onChange(event);
+            }
+        };
 
-export default EditNote;
+        return (
+            <section className="relative h-[calc(100vh-56px)] before:absolute w-0 top-0 left-10 b-0 border-l border-slate-400">
+                <textarea
+                    autoFocus
+                    placeholder="Type your note here"
+                    value={value}
+                    onChange={handleChange}
+                    {...props}
+                    ref={ref}
+                    className="editor-font font-normal text-sm text-slate-900 resize-none block border-none outline-none bg-transparent h-full w-full py-8 px-12 overflow-hidden overflow-y-scroll"
+                ></textarea>
+            </section>
+        );
+    }
+);
 
 /*
 usage: 

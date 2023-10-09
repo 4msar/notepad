@@ -1,6 +1,7 @@
 import { onValue, ref, remove, update } from "firebase/database";
 import { decryptData, encryptData } from "../utils/encryptions";
 import { database as db } from "../utils/firebase";
+import { Note } from "src/utils/types";
 
 const getRef = (rest = "") => "public-notes/" + rest;
 
@@ -23,7 +24,8 @@ class NoteService {
     }
     getAllNotes() {
         return (
-            process.env.REACT_APP_FIREBASE_DATABASE_URL + "/public-notes.json"
+            import.meta.env.VITE_APP_FIREBASE_DATABASE_URL +
+            "/public-notes.json"
         );
     }
     getAll() {
@@ -42,10 +44,10 @@ class NoteService {
         });
     }
 
-    getItem(id, callback) {
+    getItem(id: string, callback: (data: Note) => void) {
         return new Promise((resolve, reject) => {
             if (!id) {
-                return reject("Id is required!");
+                return reject(new Error("Invalid ID"));
             }
             const dataRef = ref(db, getRef(id));
             onValue(
@@ -64,10 +66,10 @@ class NoteService {
         });
     }
 
-    async updateOrCreate(key, value, getData = false) {
+    async updateOrCreate(key: string, value: Partial<Note>, getData = false) {
         if (!key) return false;
 
-        const updates = {};
+        const updates = {} as Record<string, Partial<Note>>;
         updates[getRef(key)] = value;
 
         const all = await update(ref(db), updates);
@@ -75,7 +77,7 @@ class NoteService {
         return key;
     }
 
-    async delete(key, getData = false) {
+    async delete(key: string, getData = false) {
         if (!key) return false;
         const all = await remove(ref(db, getRef(key)));
         if (getData) return all;
@@ -85,6 +87,12 @@ class NoteService {
 
 export default new NoteService();
 
-if (process.env.NODE_ENV === "development") {
+declare global {
+    interface Window {
+        NoteService?: NoteService;
+    }
+}
+
+if (import.meta.env.NODE_ENV === "development") {
     window.NoteService = new NoteService();
 }

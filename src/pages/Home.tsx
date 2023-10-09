@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router";
-import Layout from "../components/Layout";
-import { getLastOpenId } from "../utils";
+import { getLastOpenId } from "../utils/helpers";
+import { Layout } from "src/components";
 
 export default function Home() {
     const lastId = getLastOpenId();
@@ -21,7 +21,9 @@ export default function Home() {
 
     return (
         <Layout>
-            <div className="flex-center loading">Loading...</div>
+            <div className="flex justify-center items-center py-24 px-12">
+                Loading...
+            </div>
         </Layout>
     );
 }

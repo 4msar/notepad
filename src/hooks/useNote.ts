@@ -1,32 +1,34 @@
 import { onValue, ref, update } from "firebase/database";
 import { useEffect, useRef, useState } from "react";
 import NoteService from "../services/NoteService";
-import { createLocalNoteId, getLocalData } from "../utils";
+import { createLocalNoteId, getLocalData } from "../utils/helpers";
 import { INITIAL_NOTE } from "../utils/constant";
 import { database as db } from "../utils/firebase";
 import { generateNoteId, isEmpty } from "../utils/functions";
-import useLocalStorage from "./useLocalStorage";
+import { useLocalStorage } from "./useLocalStorage";
+import { Note } from "src/utils/types";
 
 const getRef = (rest = "") => "public-notes/" + rest;
 
-const useNote = (id) => {
+export const useNote = (id?: string) => {
     const tempKey = createLocalNoteId(id);
-    const [note, saveNote] = useLocalStorage(tempKey, INITIAL_NOTE);
-    const [onlineNote, setOnlineNote] = useState(note);
+    const [note, saveNote] = useLocalStorage<Note>(tempKey, INITIAL_NOTE);
+    const [onlineNote, setOnlineNote] = useState<Note>(note as Note);
     const isSaved = useRef(true);
 
-    const saveToOnline = (noteId = null) => {
+    const saveToOnline = (noteId?: string) => {
         const key = generateNoteId(noteId ?? id);
         const savedData = {
             ...note,
             key,
+            note: note.note,
             syncAt: new Date().getTime(),
             editedAt: new Date().getTime() + 10,
         };
 
         if (!key) return false;
 
-        const updates = {};
+        const updates = {} as Record<string, Note>;
         updates[getRef(key)] = savedData;
         update(ref(db), updates);
         isSaved.current = true;
@@ -35,7 +37,7 @@ const useNote = (id) => {
     };
 
     const resetWithOnline = (noteId = id) => {
-        NoteService.getItem(noteId ?? id, (note) => {
+        NoteService.getItem(`${noteId}`, (note: Note) => {
             if (isEmpty(note)) {
                 return false;
             }
@@ -46,8 +48,8 @@ const useNote = (id) => {
         });
     };
 
-    const saveLocalData = (param) => {
-        saveNote(param);
+    const saveLocalData = (param: Partial<Note>) => {
+        saveNote(param as Note);
         isSaved.current = false;
     };
 
@@ -89,5 +91,3 @@ const useNote = (id) => {
         resetWithOnline,
     };
 };
-
-export default useNote;
