@@ -15,8 +15,7 @@ export const useHotKeys = (
                     .map((item) => keys.includes(item))
                     .some((item) => item === true);
 
-            // eslint-disable-next-line no-unused-vars
-            const isAlt = event.altKey && keys.includes("alt");
+            // const isAlt = event.altKey && keys.includes("alt");
 
             const isKey = inputKeys
                 .map((item) => keys.includes(`${item}`))

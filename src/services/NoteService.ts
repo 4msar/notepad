@@ -75,7 +75,8 @@ class NoteService {
         const updates = {} as Record<string, Partial<Note>>;
 
         // encrypt data here
-        if (value?.encrypted && value?.note && !isEmpty(value?.note)) {
+        if (!value?.encrypted && value?.note && !isEmpty(value?.note)) {
+            value.encrypted = true;
             value.note = encryptData(value.note);
         }
 

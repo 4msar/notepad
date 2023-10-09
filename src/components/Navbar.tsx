@@ -1,4 +1,4 @@
-import React, { MouseEvent, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useHotKeys } from "../hooks";
 import { getTheme, removeLocalNote, setTheme } from "../utils";
