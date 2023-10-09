@@ -2,21 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer {
-    @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@200;400;600;800&display=swap");
-    @import url("https://fonts.maateen.me/kalpurush/font.css");
-}
-
-@layer components {
-    .App {
-        height: 100vh;
-        overflow: hidden;
-        background-image: radial-gradient(#ece7e0 2px, transparent 0);
-        background-size: 20px 20px;
-    }
-}
-
 @layer base {
+    body {
+        @apply bg-white dark:bg-slate-700 text-white;
+    }
+
+    .App {
+        background-image: radial-gradient(theme('colors.gray.200') 2px, transparent 0);
+        @apply h-screen overflow-hidden bg-20;
+    }
+
+    html.dark .App {
+        background-image: radial-gradient(theme('colors.gray.600') 2px, transparent 0);
+    }
+
     .editor-font {
         font-family: "Nunito", "Kalpurush", sans-serif;
         font-weight: 400;

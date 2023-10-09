@@ -41,7 +41,7 @@ export default function NewNote() {
     return (
         <Layout onSave={onSave}>
             <EditorContent
-                className="relative h-[calc(100vh-56px)] px-12 before:absolute before:w-full before:h-full before:top-0 before:left-10 before:b-0 before:border-l before:border-slate-400"
+                className="relative h-[calc(100vh-56px)] text-slate-900 dark:text-white px-12 pt-4 before:absolute before:w-full before:h-full before:top-0 before:left-10 before:b-0 before:border-l before:border-slate-400"
                 editor={editor}
             />
             <LastOpenNotePrompt />

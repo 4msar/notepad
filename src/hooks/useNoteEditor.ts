@@ -1,4 +1,4 @@
-import { useEditor } from "@tiptap/react";
+import { Editor, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { debounce, parseNote } from "../utils/functions";
 
@@ -12,7 +12,7 @@ export function useNoteEditor(
     { text, isReadOnly, onChange }: UseNoteEditorProps,
     deps = []
 ) {
-    const handleChange = ({ editor }: { editor: any }) => {
+    const handleChange = ({ editor }: { editor: Editor }) => {
         const editorContent = editor.getHTML();
         // send the content to an API here
         if (typeof onChange === "function") {
@@ -29,7 +29,7 @@ export function useNoteEditor(
             onUpdate: debounce(handleChange, 100),
             editorProps: {
                 attributes: {
-                    class: "prose editor-font font-normal text-xl text-slate-900 resize-none block border-none outline-none bg-transparent max-w-full w-full h-full overflow-hidden overflow-y-scroll",
+                    class: "prose dark:prose-invert editor-font font-normal text-xl text-slate-900 dark:text-white resize-none block border-none outline-none bg-transparent max-w-full w-full h-full overflow-hidden overflow-y-scroll",
                 },
             },
         },

@@ -30,7 +30,7 @@ export default function Note() {
     const navigate = useNavigate();
     const showSnackbar = useSnackbar();
 
-    let urlParams = new URLSearchParams(window.location.search);
+    const urlParams = new URLSearchParams(window.location.search);
     const encryptedToken = urlParams.get("token");
     const isReadOnly = urlParams.has("readonly");
 
@@ -88,7 +88,7 @@ export default function Note() {
     return (
         <Layout onSave={onSave} onDelete={onDelete}>
             <EditorContent
-                className="relative h-[calc(100vh-56px)] px-12 before:absolute before:w-full before:h-full before:top-0 before:left-10 before:b-0 before:border-l before:border-slate-400"
+                className="relative h-[calc(100vh-56px)] text-slate-900 dark:text-white px-12 pt-4 before:absolute before:w-full before:h-full before:top-0 before:left-10 before:b-0 before:border-l before:border-slate-400"
                 editor={editor}
             />
             {!isSaved && <UnSaveNotice onReset={resetWithOnline} />}

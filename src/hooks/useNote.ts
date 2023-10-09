@@ -7,26 +7,29 @@ import { database as db } from "../utils/firebase";
 import { generateNoteId, isEmpty } from "../utils/functions";
 import { useLocalStorage } from "./useLocalStorage";
 import { Note } from "src/utils/types";
+import { decryptData, encryptData } from "src/utils";
 
 const getRef = (rest = "") => "public-notes/" + rest;
 
 export const useNote = (id?: string) => {
     const tempKey = createLocalNoteId(id);
     const [note, saveNote] = useLocalStorage<Note>(tempKey, INITIAL_NOTE);
-    const [onlineNote, setOnlineNote] = useState<Note>(note as Note);
+    const [onlineNote, setOnlineNote] = useState<Note>(note);
     const isSaved = useRef(true);
 
     const saveToOnline = (noteId?: string) => {
         const key = generateNoteId(noteId ?? id);
-        const savedData = {
+
+        if (!key) return false;
+
+        const savedData: Note = {
             ...note,
             key,
-            note: note.note,
+            note: encryptData(note.note),
+            encrypted: true,
             syncAt: new Date().getTime(),
             editedAt: new Date().getTime() + 10,
         };
-
-        if (!key) return false;
 
         const updates = {} as Record<string, Note>;
         updates[getRef(key)] = savedData;
@@ -60,8 +63,14 @@ export const useNote = (id?: string) => {
                 dataRef,
                 (snapshot) => {
                     const note = snapshot.val();
+
                     if (isEmpty(note)) {
                         return false;
+                    }
+
+                    // decrypt data here
+                    if (note?.encrypted) {
+                        note.note = decryptData(note.note);
                     }
                     setOnlineNote(note);
 

@@ -2,32 +2,19 @@ import { onValue, ref, remove, update } from "firebase/database";
 import { decryptData, encryptData } from "../utils/encryptions";
 import { database as db } from "../utils/firebase";
 import { Note } from "src/utils/types";
+import { ENCRYPTION_KEY, isEmpty } from "src/utils";
 
 const getRef = (rest = "") => "public-notes/" + rest;
-
-/**
- * Data Model
- *
- * editedAt: 1675078396832
- * key: "note-temp"
- * note: "html content"
- * syncAt: 1675078396822
- * encrypted: true
- */
 
 class NoteService {
     encryption() {
         return {
             encrypt: encryptData,
             decrypt: decryptData,
+            KEY: ENCRYPTION_KEY,
         };
     }
-    getAllNotes() {
-        return (
-            import.meta.env.VITE_APP_FIREBASE_DATABASE_URL +
-            "/public-notes.json"
-        );
-    }
+
     getAll() {
         return new Promise((resolve, reject) => {
             const dataRef = ref(db, getRef());
@@ -35,6 +22,16 @@ class NoteService {
                 dataRef,
                 (snapshot) => {
                     const data = snapshot.val();
+
+                    // decrypt data here
+                    Object.keys(data).forEach((key) => {
+                        const item = data[key] as Note;
+                        if (item?.encrypted) {
+                            item.note = decryptData(item.note);
+                        }
+                        data[key] = item;
+                    });
+
                     resolve(data);
                 },
                 (error) => {
@@ -53,7 +50,13 @@ class NoteService {
             onValue(
                 dataRef,
                 (snapshot) => {
-                    const data = snapshot.val();
+                    const data = snapshot.val() as Note;
+
+                    // decrypt data here
+                    if (data?.encrypted) {
+                        data.note = decryptData(data.note);
+                    }
+
                     resolve(data);
                     if (typeof callback === "function") {
                         callback(data);
@@ -70,6 +73,12 @@ class NoteService {
         if (!key) return false;
 
         const updates = {} as Record<string, Partial<Note>>;
+
+        // encrypt data here
+        if (value?.encrypted && value?.note && !isEmpty(value?.note)) {
+            value.note = encryptData(value.note);
+        }
+
         updates[getRef(key)] = value;
 
         const all = await update(ref(db), updates);
@@ -93,6 +102,6 @@ declare global {
     }
 }
 
-if (import.meta.env.NODE_ENV === "development") {
+if (import.meta.env.NODE_ENV !== "production") {
     window.NoteService = new NoteService();
 }

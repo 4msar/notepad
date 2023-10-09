@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { MouseEvent, useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useHotKeys } from "../hooks";
 import { getTheme, removeLocalNote, setTheme } from "../utils";
@@ -67,13 +67,12 @@ export function Navbar({ onSave, onDelete }: NavbarProps) {
         }
     };
 
-    useHotKeys(["ctrl", "n", "cmd", "n"], (event: any) => {
-        console.log(event);
+    useHotKeys(["ctrl", "n", "cmd", "n"], () => {
         navigate("/new");
     });
     useHotKeys(["ctrl", "o", "cmd", "o"], handleOpen);
 
-    let urlParams = new URLSearchParams(window.location.search);
+    const urlParams = new URLSearchParams(window.location.search);
     const encryptedToken = urlParams.get("token");
     const isReadOnly = urlParams.has("readonly");
     const decryptedToken = !isEmpty(encryptedToken)
@@ -84,6 +83,7 @@ export function Navbar({ onSave, onDelete }: NavbarProps) {
         const handleResize = () => {
             setIsMobile(window.innerWidth <= 425);
         };
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const menuHandler = (event: any) => {
             if (menuRef.current && !menuRef.current.contains(event.target)) {
                 toggleMenu(false);
@@ -113,8 +113,6 @@ export function Navbar({ onSave, onDelete }: NavbarProps) {
         setTheme(mode);
         setAppTheme(mode);
     };
-
-    console.log({ decryptedToken });
 
     const menuActions = () => {
         return (
@@ -167,7 +165,7 @@ export function Navbar({ onSave, onDelete }: NavbarProps) {
             className="text-slate-900 dark:text-white bg-slate-400 dark:bg-slate-900 w-full h-14 fixed top-0 z-50 shadow-sm flex items-center"
         >
             <div className="flex justify-between items-center px-4 w-full max-w-full mx-auto">
-                <h1 className="text-2xl m-0 flex items-center">
+                <h1 className="text-4xl font-bold font-nunito m-0 flex items-center">
                     <Link title="Simple Note Taking Application..." to="/">
                         Noto
                     </Link>

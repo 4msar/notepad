@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { encryptData } from "./encryptions";
 
 /**
@@ -7,7 +8,7 @@ import { encryptData } from "./encryptions";
  * @return {[type]}            [description]
  */
 export function filterObject(
-    obj: Object,
+    obj: any,
     callback: (val: any, key: string) => boolean
 ) {
     return Object.fromEntries(
@@ -164,6 +165,7 @@ export function uniqByKeepLast(array: Array<any>, key: (item: any) => any) {
 export function pick(obj: Record<any, any>, arr: Array<string>) {
     const newObj: Record<string, any> = {};
     arr.forEach((key) => {
+        // eslint-disable-next-line no-prototype-builtins
         if (obj.hasOwnProperty(key)) {
             newObj[key] = obj[key];
         }
@@ -225,7 +227,7 @@ export function arrayChunk(inputArray: Array<any>, chunk = 3) {
 /**
  * Check the value is empty or not.
  * @param  {[type]}  value [description]
- * @return {Boolean}       [description]
+ * @return {Boolean} check the value is empty or not
  */
 export function isEmpty(value: any) {
     if (typeof value === "undefined" || value === null || value === undefined) {
@@ -243,7 +245,7 @@ export function isEmpty(value: any) {
     if (typeof value === "number") {
         return value <= 0;
     }
-    return !value;
+    return false;
 }
 
 /**
