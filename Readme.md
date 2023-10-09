@@ -1,6 +1,8 @@
 # Notepad
 
-A Simple note taking application and sharing platform.
+A Simple realtime note taking application and sharing platform.
+
+![Notepad](./public/screenshot.png)
 
 ## Available Scripts
 

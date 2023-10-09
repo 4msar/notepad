@@ -1,15 +1,12 @@
 import React from "react";
-import { createRoot } from 'react-dom/client';
-import { SnackbarProvider } from 'react-notistack';
-import App from "./App";
+import ReactDOM from "react-dom/client";
 import reportWebVitals from "./reportWebVitals";
+import { SnackbarProvider } from "notistack";
 import * as serviceWorker from "./serviceWorkerRegistration";
-import "./styles/index.css";
-import "./styles/prose.css";
+import App from "./App.tsx";
+import "./index.css";
 
-const container = document.getElementById('root');
-const root = createRoot(container); // createRoot(container!) if you use TypeScript
-root.render(
+ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
         <SnackbarProvider
             anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
