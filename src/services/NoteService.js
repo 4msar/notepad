@@ -12,7 +12,9 @@ class NoteService {
         };
     }
     getAllNotes() {
-        return process.env.APP_FIREBASE_DATABASE_URL + "/public-notes.json";
+        return (
+            process.env.REACT_APP_FIREBASE_DATABASE_URL + "/public-notes.json"
+        );
     }
     getAll() {
         return new Promise((resolve, reject) => {
@@ -72,5 +74,3 @@ class NoteService {
 }
 
 export default new NoteService();
-
-window.NS = new NoteService();
