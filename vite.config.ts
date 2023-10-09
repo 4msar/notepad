@@ -8,6 +8,7 @@ export default defineConfig({
     plugins: [
         react(),
         VitePWA({
+            outDir: "dist",
             registerType: "autoUpdate",
             injectRegister: "auto",
             workbox: {
