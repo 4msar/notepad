@@ -7,7 +7,7 @@ export function Layout({
     children: React.ReactNode;
 } & Partial<NavbarProps>) {
     return (
-        <div className="App">
+        <div className="App font-nunito">
             <Navbar {...(props as NavbarProps)} />
             <main className="max-w-full relative mt-14 mx-auto">
                 {children}

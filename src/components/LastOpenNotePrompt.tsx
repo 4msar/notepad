@@ -16,17 +16,23 @@ export function LastOpenNotePrompt() {
     if (!id) return null;
 
     return (
-        <div className="last-note">
-            <div className="last-note-title">
+        <div className="fixed bottom-0 right-0 left-0 max-w-[50vw] w-auto my-0 mx-auto bg-yellow-200 rounded-tr rounded-tl px-2 py-1 text-slate-900 font-semibold font-nunito flex justify-center items-center">
+            <div className="hidden sm:block">
                 You have a last edited note, do you want to open it?
             </div>
-            <div className="last-note-title mobile">Open Last Note</div>
+            <div className="sm:hidden block">Open Last Note</div>
 
-            <div className="last-note-buttons">
-                <Link className="last-note-button" to={`/n/${id}`}>
+            <div className="flex items-center">
+                <Link
+                    className="cursor-pointer ml-2 text-blue-500"
+                    to={`/n/${id}`}
+                >
                     Open
                 </Link>
-                <div className="last-note-button" onClick={handleCancel}>
+                <div
+                    className="cursor-pointer ml-2 text-red-500"
+                    onClick={handleCancel}
+                >
                     Cancel
                 </div>
             </div>

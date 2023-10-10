@@ -1,4 +1,6 @@
-type IconProps = any;
+import { HTMLAttributes } from "react";
+
+type IconProps = HTMLAttributes<HTMLDivElement>;
 
 export const Sync = (props: IconProps) => (
     <div {...props}>

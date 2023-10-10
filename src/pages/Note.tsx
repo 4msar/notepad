@@ -19,7 +19,7 @@ import {
 } from "src/utils";
 import { Layout, UnSaveNotice } from "src/components";
 
-export default function Note() {
+export default function NotePage() {
     const { note: noteId = "" } = useParams();
     const {
         onlineNote: data,
@@ -36,6 +36,20 @@ export default function Note() {
     const isReadOnly = urlParams.has("readonly");
 
     useUnload(!isSaved);
+    const editor = useNoteEditor(
+        {
+            text: data.note,
+            isReadOnly,
+            onChange: (value) => {
+                const noteObj = {
+                    editedAt: new Date().getTime(),
+                    note: value,
+                };
+                saveNote(noteObj);
+            },
+        },
+        [noteId, data.note] as never[]
+    );
 
     const onSave = () => {
         saveToOnline(noteId);
@@ -71,20 +85,6 @@ export default function Note() {
     useEffect(() => {
         setLastOpenId(noteId);
     }, [noteId]);
-
-    const editor = useNoteEditor(
-        {
-            text: data.note,
-            isReadOnly,
-            onChange: (value) => {
-                saveNote({
-                    editedAt: new Date().getTime(),
-                    note: value,
-                });
-            },
-        },
-        [noteId] as never[]
-    );
 
     return (
         <Layout onSave={onSave} onDelete={onDelete}>

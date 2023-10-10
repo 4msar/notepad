@@ -22,7 +22,10 @@ export default function NewNote() {
         prompt("Here is your note link:\n", url.toString());
         if (noteId) {
             const token = encryptData(noteId);
-            navigate(`/n/${noteId}?token=${token}`, { replace: true });
+            url.searchParams.set("token", token);
+            navigate(`/n/${noteId}?token=${encodeURIComponent(token)}`, {
+                replace: true,
+            });
         }
     };
 

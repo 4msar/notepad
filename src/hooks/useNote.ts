@@ -39,8 +39,8 @@ export const useNote = (id?: string) => {
         return key;
     };
 
-    const resetWithOnline = (noteId = id) => {
-        NoteService.getItem(`${noteId}`, (note: Note) => {
+    const resetWithOnline = () => {
+        NoteService.getItem(`${id}`, (note: Note) => {
             if (isEmpty(note)) {
                 return false;
             }

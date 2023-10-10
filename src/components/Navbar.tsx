@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useHotKeys } from "../hooks";
 import { getTheme, removeLocalNote, setTheme } from "../utils";
@@ -75,9 +75,11 @@ export function Navbar({ onSave, onDelete }: NavbarProps) {
     const urlParams = new URLSearchParams(window.location.search);
     const encryptedToken = urlParams.get("token");
     const isReadOnly = urlParams.has("readonly");
-    const decryptedToken = !isEmpty(encryptedToken)
-        ? decryptData(encryptedToken ?? "")
-        : null;
+    const decryptedToken = useMemo(() => {
+        return encryptedToken && !isEmpty(encryptedToken)
+            ? decryptData(decodeURIComponent(encryptedToken) ?? "")
+            : null;
+    }, [encryptedToken]);
 
     useEffect(() => {
         const handleResize = () => {

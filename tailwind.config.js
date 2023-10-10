@@ -18,6 +18,7 @@ export default {
 
             fontFamily: {
                 nunito: ["Nunito", "sans-serif"],
+                bangla: ["Kalpurush", "sans-serif"],
             },
         },
     },
