@@ -1,5 +1,6 @@
 import { APP_THEME, INITIAL_NOTE, LAST_NOTE_ID, LOCAL_NOTES } from "./constant";
 import { generateNoteId, isEmpty, isJsonString } from "./functions";
+import { Note } from "./types";
 
 export const getLastOpenId = () => {
     return localStorage.getItem(LAST_NOTE_ID) ?? "";
@@ -33,11 +34,11 @@ export const createLocalNoteId = (id?: string) => {
     return `${LOCAL_NOTES}${key}__`;
 };
 
-export const getLocalData = (id = "") => {
+export const getLocalData = <T = Note>(id = "") => {
     const key = id.startsWith(LOCAL_NOTES) ? id : createLocalNoteId(id);
     const data = localStorage.getItem(key) ?? "";
     if (!isEmpty(data) && isJsonString(data)) {
-        return JSON.parse(data);
+        return JSON.parse(data) as T;
     }
-    return INITIAL_NOTE;
+    return INITIAL_NOTE as T;
 };

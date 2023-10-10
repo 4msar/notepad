@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { LOCAL_NOTES } from "../utils/constant";
 
-export function useLocalStorage<T = any>(key = LOCAL_NOTES, initialValue: T) {
+export function useLocalStorage<T = any>(key = LOCAL_NOTES, initialValue?: T) {
     // State to store our value
     // Pass initial state function to useState so logic is only executed once
     const [storedValue, setStoredValue] = useState<T>(() => {

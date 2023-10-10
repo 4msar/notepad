@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import NewNote from "./pages/NewNote";
 import Note from "./pages/Note";
+import ShareNote from "./pages/Share";
 
 function App() {
     return (
@@ -14,6 +15,7 @@ function App() {
                 <Route path="*" element={<Navigate to="/new" />} />
                 <Route path="/new" element={<NewNote />} />
                 <Route path="/n/:note" element={<Note />} />
+                <Route path="/s/:note" element={<ShareNote />} />
             </Routes>
         </Router>
     );

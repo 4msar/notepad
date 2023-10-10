@@ -38,7 +38,7 @@ export function useNoteEditor(
                 },
             },
         },
-        [text, ...deps]
+        [...deps]
     );
     return editor;
 }

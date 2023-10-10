@@ -22,7 +22,8 @@ import { Layout, UnSaveNotice } from "src/components";
 export default function NotePage() {
     const { note: noteId = "" } = useParams();
     const {
-        onlineNote: data,
+        onlineNote,
+        note: data,
         isSaved,
         saveNote,
         saveToOnline,
@@ -38,7 +39,7 @@ export default function NotePage() {
     useUnload(!isSaved);
     const editor = useNoteEditor(
         {
-            text: data.note,
+            text: data.note ?? "",
             isReadOnly,
             onChange: (value) => {
                 const noteObj = {
@@ -48,8 +49,16 @@ export default function NotePage() {
                 saveNote(noteObj);
             },
         },
-        [noteId, data.note] as never[]
+        [noteId] as never[]
     );
+
+    useEffect(() => {
+        // Online is updated
+        const isOnlineNoteIsLatest = onlineNote?.editedAt >= data?.editedAt;
+        if (editor && isOnlineNoteIsLatest) {
+            editor.commands.setContent(onlineNote?.note ?? "");
+        }
+    }, [onlineNote, data, editor]);
 
     const onSave = () => {
         saveToOnline(noteId);

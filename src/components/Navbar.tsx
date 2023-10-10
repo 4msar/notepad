@@ -1,20 +1,22 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useHotKeys } from "../hooks";
+import { useHotKeys, useSnackbar } from "../hooks";
 import { getTheme, removeLocalNote, setTheme } from "../utils";
 import { decryptData } from "../utils/encryptions";
 import clsx from "clsx";
 import {
     generateNoteId,
     generateNoteIdWithToken,
+    generateShareToken,
     isEmpty,
 } from "../utils/functions";
-import { Sun, Moon, Menu, Trash, AddNew, Open, Save } from "./Icons";
+import { Sun, Moon, Menu, Trash, AddNew, Open, Save, Share } from "./Icons";
 import { Tooltip } from "./Tooltip";
 
 export type NavbarProps = {
     onSave: (evt: React.MouseEvent) => void;
     onDelete: (evt: React.MouseEvent) => void;
+    hideNavLinks?: boolean;
 };
 
 const ActionButton = ({
@@ -46,14 +48,28 @@ const ActionButton = ({
     );
 };
 
-export function Navbar({ onSave, onDelete }: NavbarProps) {
+export function Navbar({
+    onSave,
+    onDelete,
+    hideNavLinks = false,
+}: NavbarProps) {
     const navigate = useNavigate();
-    const { note } = useParams();
+    const { note = "" } = useParams();
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 425);
     const [menuOpen, toggleMenu] = useState(false);
+    const showSnackbar = useSnackbar();
 
     const [appTheme, setAppTheme] = useState(getTheme() ?? "light");
     const menuRef = useRef<HTMLElement>(null);
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const encryptedToken = urlParams.get("token");
+    const isReadOnly = urlParams.has("readonly");
+    const decryptedToken = useMemo(() => {
+        return encryptedToken && !isEmpty(encryptedToken)
+            ? decryptData(decodeURIComponent(encryptedToken) ?? "")
+            : null;
+    }, [encryptedToken]);
 
     const handleOpen = () => {
         const id = prompt("Enter note key to open:", "note-") ?? "";
@@ -69,19 +85,21 @@ export function Navbar({ onSave, onDelete }: NavbarProps) {
         }
     };
 
+    const onShareClick = () => {
+        const shareToken = generateShareToken(note);
+        toggleMenu(false);
+        const noteId = generateNoteId(note ?? "");
+        const url = `${
+            window.location.origin
+        }/s/${noteId}?token=${encodeURIComponent(shareToken)}`;
+        navigator.clipboard.writeText(url);
+        showSnackbar("Link copied to clipboard");
+    };
+
     useHotKeys(["ctrl", "n", "cmd", "n"], () => {
         navigate("/new");
     });
     useHotKeys(["ctrl", "o", "cmd", "o"], handleOpen);
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const encryptedToken = urlParams.get("token");
-    const isReadOnly = urlParams.has("readonly");
-    const decryptedToken = useMemo(() => {
-        return encryptedToken && !isEmpty(encryptedToken)
-            ? decryptData(decodeURIComponent(encryptedToken) ?? "")
-            : null;
-    }, [encryptedToken]);
 
     useEffect(() => {
         const handleResize = () => {
@@ -119,6 +137,19 @@ export function Navbar({ onSave, onDelete }: NavbarProps) {
     };
 
     const menuActions = () => {
+        if (hideNavLinks) {
+            return (
+                <ActionButton
+                    onClick={onShareClick}
+                    id="share"
+                    title="Copy Share Link"
+                    className="dark:border-indigo-400 text-slate-800 hover:text-indigo-400"
+                >
+                    <Share />{" "}
+                    <span className="pl-2 inline sm:hidden">Share</span>
+                </ActionButton>
+            );
+        }
         return (
             <>
                 <ActionButton
@@ -160,6 +191,17 @@ export function Navbar({ onSave, onDelete }: NavbarProps) {
                         <span className="pl-2 inline sm:hidden">Delete</span>
                     </ActionButton>
                 )}
+                {note && (
+                    <ActionButton
+                        onClick={onShareClick}
+                        id="share"
+                        title="Share the note"
+                        className="dark:border-indigo-400 text-slate-800 hover:text-indigo-400"
+                    >
+                        <Share />{" "}
+                        <span className="pl-2 inline sm:hidden">Share</span>
+                    </ActionButton>
+                )}
             </>
         );
     };
@@ -169,7 +211,7 @@ export function Navbar({ onSave, onDelete }: NavbarProps) {
     return (
         <header
             ref={menuRef}
-            className="text-slate-900 dark:text-white bg-slate-400 dark:bg-slate-900 w-full h-14 shadow-sm flex items-center"
+            className="text-slate-900 dark:text-white bg-slate-400 dark:bg-slate-900 w-full h-14 shadow-sm flex items-center rounded-tr-md rounded-tl-md"
         >
             <div className="flex justify-between items-center px-4 w-full max-w-full mx-auto z-40">
                 <h1 className="text-4xl font-bold font-nunito m-0 flex items-center">

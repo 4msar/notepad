@@ -79,7 +79,16 @@ export const useNote = (id?: string) => {
                         saveNote(note);
                         isSaved.current = true;
                     }
-                    if (localData?.editedAt <= note?.editedAt) {
+
+                    /**
+                     * When online data is newer than local data
+                     * then update local data
+                     */
+                    const isLocalNoteIsLatest =
+                        onlineNote?.editedAt <= note?.editedAt;
+                    if (isLocalNoteIsLatest) {
+                        isSaved.current =
+                            onlineNote?.editedAt === note?.editedAt;
                         saveNote(note);
                     }
                 },

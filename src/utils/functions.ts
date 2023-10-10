@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { encryptData } from "./encryptions";
+import { decryptData, encryptData } from "./encryptions";
 
 /**
  * Filter an object
@@ -347,6 +347,21 @@ export function generateNoteId(noteId = "") {
     }
     return id;
 }
+
+export function generateShareToken(noteId: string) {
+    let readyForShare = noteId;
+    if (noteId.startsWith("note-") || noteId.startsWith("msar-")) {
+        readyForShare = noteId.slice(5);
+    }
+
+    return encryptData(`share-${readyForShare}`);
+}
+
+export function checkShareTokenIsValid(token: string) {
+    const decryptedToken = decryptData(token);
+    return decryptedToken.startsWith("share-");
+}
+
 export function generateNoteIdWithToken(id = "") {
     if (id.startsWith("note-")) {
         return "";
