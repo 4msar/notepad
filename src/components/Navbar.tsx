@@ -33,7 +33,7 @@ const ActionButton = ({
         <strong
             id={id}
             className={clsx(
-                "text-slate-900 dark:text-white cursor-pointer border rounded text-xs py-0.5 px-1.5 transition-all duration-200 mr-2.5",
+                "text-slate-900 dark:text-white w-full cursor-pointer border rounded text-xs py-0.5 px-1.5 transition-all duration-200 sm:mr-2.5",
                 className
             )}
             onClick={onClick}
@@ -185,7 +185,7 @@ export function Navbar({ onSave, onDelete }: NavbarProps) {
                     {isMobile && (
                         <Menu
                             onClick={() => toggleMenu(!menuOpen)}
-                            className="h-6 p-2.5"
+                            className="h-6 cursor-pointer"
                         />
                     )}
                     {!isMobile && menuActions()}
@@ -193,8 +193,8 @@ export function Navbar({ onSave, onDelete }: NavbarProps) {
             </div>
             {isMobile && (
                 <div
-                    className={`max-h-52 w-32 flex flex-col items-end absolute right-52 top-14 transition-all duration-200 ${
-                        menuOpen ? "right-0" : ""
+                    className={`max-h-52 w-24 space-y-2 flex flex-col items-end absolute top-14 p-2 bg-slate-200 rounded-l transition-all duration-200 ${
+                        menuOpen ? "right-0" : "-right-52"
                     }`}
                 >
                     {menuActions()}
