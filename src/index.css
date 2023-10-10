@@ -4,6 +4,18 @@
 
 @layer base {
 
+    html {
+        --scrollbar-bg-color: #f1f1f1;
+        --scrollbar-thumb-color: #888;
+        --scrollbar-thumb-hover-color: #555;
+    }
+
+    html.dark {
+        --scrollbar-bg-color: #1F2937;
+        --scrollbar-thumb-color: #4B5563;
+        --scrollbar-thumb-hover-color: #9CA3AF;
+    }
+
     /* width */
     ::-webkit-scrollbar {
         width: 4px;
@@ -11,29 +23,32 @@
 
     /* Track */
     ::-webkit-scrollbar-track {
-        background: #f1f1f1;
+        background: var(--scrollbar-bg-color);
     }
 
     /* Handle */
     ::-webkit-scrollbar-thumb {
-        background: #888;
+        background: var(--scrollbar-thumb-color);
     }
 
     /* Handle on hover */
     ::-webkit-scrollbar-thumb:hover {
-        background: #555;
+        background: var(--scrollbar-thumb-hover-color);
     }
 
     body {
-        @apply bg-white dark:bg-slate-700 text-white;
+        @apply bg-slate-100 dark:bg-slate-700 text-white;
     }
+}
 
-    .App {
+@layer components {
+
+    .point-bg {
         background-image: radial-gradient(theme('colors.gray.200') 2px, transparent 0);
-        @apply h-screen overflow-hidden bg-20;
+        background-size: 20px 20px;
     }
 
-    html.dark .App {
+    html.dark .point-bg {
         background-image: radial-gradient(theme('colors.gray.600') 2px, transparent 0);
     }
 

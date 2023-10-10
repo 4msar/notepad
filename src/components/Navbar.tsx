@@ -9,7 +9,8 @@ import {
     generateNoteIdWithToken,
     isEmpty,
 } from "../utils/functions";
-import { Sun, Moon, Menu } from "./Icons";
+import { Sun, Moon, Menu, Trash, AddNew, Open, Save } from "./Icons";
+import { Tooltip } from "./Tooltip";
 
 export type NavbarProps = {
     onSave: (evt: React.MouseEvent) => void;
@@ -30,17 +31,18 @@ const ActionButton = ({
     className?: string;
 }) => {
     return (
-        <strong
-            id={id}
-            className={clsx(
-                "text-slate-900 dark:text-white w-full cursor-pointer border rounded text-xs py-0.5 px-1.5 transition-all duration-200 sm:mr-2.5",
-                className
-            )}
-            onClick={onClick}
-            title={title}
-        >
-            {children}
-        </strong>
+        <Tooltip message={title} position="bottom">
+            <strong
+                id={id}
+                className={clsx(
+                    "text-slate-900 dark:text-white cursor-pointer border rounded text-xs p-1 transition-all duration-200 flex items-center w-20 sm:w-auto justify-between",
+                    className
+                )}
+                onClick={onClick}
+            >
+                {children}
+            </strong>
+        </Tooltip>
     );
 };
 
@@ -120,29 +122,31 @@ export function Navbar({ onSave, onDelete }: NavbarProps) {
         return (
             <>
                 <ActionButton
-                    className="border-blue-400 bg-blue-100 dark:bg-transparent hover:text-blue-400"
+                    className="dark:border-blue-400 text-slate-800 hover:text-blue-400"
                     onClick={onNewClick}
                     id="new"
                     title="Create New"
                 >
-                    New
+                    <AddNew />{" "}
+                    <span className="pl-2 inline sm:hidden">New</span>
                 </ActionButton>
                 <ActionButton
                     onClick={handleOpen}
                     id="open"
                     title="Open a note"
-                    className="border-yellow-400 bg-yellow-100 dark:bg-transparent hover:text-yellow-400"
+                    className="dark:border-yellow-400 text-slate-800 hover:text-yellow-400"
                 >
-                    Open
+                    <Open /> <span className="pl-2 inline sm:hidden">Open</span>
                 </ActionButton>
                 {!isReadOnly && (
                     <ActionButton
                         onClick={onSave}
                         id="save"
                         title="Save the Note"
-                        className="border-green-400 bg-green-100 dark:bg-transparent hover:text-green-400"
+                        className="dark:border-green-400 text-slate-800 hover:text-green-400"
                     >
-                        Save
+                        <Save />{" "}
+                        <span className="pl-2 inline sm:hidden">Save</span>
                     </ActionButton>
                 )}
                 {note && !isReadOnly && note === decryptedToken && (
@@ -150,9 +154,10 @@ export function Navbar({ onSave, onDelete }: NavbarProps) {
                         onClick={onDelete}
                         id="delete"
                         title="Delete the Note"
-                        className="border-red-400 bg-red-100 dark:bg-transparent hover:text-red-400"
+                        className="dark:border-red-400 text-slate-800 hover:text-red-400"
                     >
-                        Delete
+                        <Trash />{" "}
+                        <span className="pl-2 inline sm:hidden">Delete</span>
                     </ActionButton>
                 )}
             </>
@@ -164,9 +169,9 @@ export function Navbar({ onSave, onDelete }: NavbarProps) {
     return (
         <header
             ref={menuRef}
-            className="text-slate-900 dark:text-white bg-slate-400 dark:bg-slate-900 w-full h-14 fixed top-0 z-50 shadow-sm flex items-center"
+            className="text-slate-900 dark:text-white bg-slate-400 dark:bg-slate-900 w-full h-14 shadow-sm flex items-center"
         >
-            <div className="flex justify-between items-center px-4 w-full max-w-full mx-auto">
+            <div className="flex justify-between items-center px-4 w-full max-w-full mx-auto z-40">
                 <h1 className="text-4xl font-bold font-nunito m-0 flex items-center">
                     <Link title="Simple Note Taking Application..." to="/">
                         Noto
@@ -183,7 +188,7 @@ export function Navbar({ onSave, onDelete }: NavbarProps) {
                         />
                     )}
                 </h1>
-                <div className="flex items-center">
+                <div className="flex items-center space-x-1">
                     {isMobile && (
                         <Menu
                             onClick={() => toggleMenu(!menuOpen)}
@@ -192,16 +197,18 @@ export function Navbar({ onSave, onDelete }: NavbarProps) {
                     )}
                     {!isMobile && menuActions()}
                 </div>
+                {isMobile && (
+                    <div
+                        className={`max-h-52 w-24 right-1 rounded-l z-20 space-y-2 flex flex-col sm:items-end absolute p-2 m-0 bg-slate-200 sm:rounded-l transition-all duration-400 justify-center items-center overflow-hidden ${
+                            menuOpen
+                                ? "top-14 visible opacity-100"
+                                : "-top-52 opacity-0 invisible"
+                        }`}
+                    >
+                        {menuActions()}
+                    </div>
+                )}
             </div>
-            {isMobile && (
-                <div
-                    className={`max-h-52 w-24 space-y-2 flex flex-col items-end absolute top-14 p-2 bg-slate-200 rounded-l transition-all duration-200 ${
-                        menuOpen ? "right-0" : "-right-52"
-                    }`}
-                >
-                    {menuActions()}
-                </div>
-            )}
         </header>
     );
 }

@@ -52,7 +52,7 @@ export const useNote = (id?: string) => {
     };
 
     const saveLocalData = (param: Partial<Note>) => {
-        saveNote(param as Note);
+        saveNote({ ...note, ...param });
         isSaved.current = false;
     };
 
