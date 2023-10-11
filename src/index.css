@@ -9,13 +9,15 @@
         --scrollbar-thumb-color: #888;
         --scrollbar-thumb-hover-color: #555;
 
-        @apply overflow-hidden;
+        @apply overflow-hidden bg-slate-100;
     }
 
     html.dark {
         --scrollbar-bg-color: #1F2937;
         --scrollbar-thumb-color: #4B5563;
         --scrollbar-thumb-hover-color: #9CA3AF;
+
+        @apply bg-slate-800 sm:bg-slate-700;
     }
 
     /* width */

@@ -83,7 +83,7 @@ export const Tooltip = ({
 
     const classContainer = `w-max absolute z-10 ${setContainerPosition(
         position
-    )} bg-gray-600 text-white text-sm px-2 py-1 rounded flex items-center transition-all duration-150 pointer-events-none`;
+    )} bg-gray-600 text-white text-sm px-2 py-1 rounded hidden items-center transition-all duration-150 pointer-events-none sm:flex`;
 
     const pointerClasses = `bg-gray-600 h-3 w-3 absolute z-10 ${setPointerPosition(
         position

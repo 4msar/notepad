@@ -205,7 +205,7 @@ export function Navbar({
     return (
         <header
             ref={menuRef}
-            className="text-slate-900 dark:text-white bg-slate-400 dark:bg-slate-900 w-full h-14 shadow-sm flex items-center rounded-none sm:rounded-tr-md sm:rounded-tl-md"
+            className="text-slate-900 dark:text-white bg-slate-400 dark:bg-slate-900 w-full h-14 shadow-sm flex items-center border-none sm:border-x sm:border-t dark:border-slate-800 rounded-none sm:rounded-tr-md sm:rounded-tl-md"
         >
             <div className="flex justify-between items-center px-4 w-full max-w-full mx-auto z-40">
                 <h1 className="text-4xl font-bold font-nunito m-0 flex items-center">
@@ -224,17 +224,19 @@ export function Navbar({
                         />
                     )}
                 </h1>
-                <div className="flex items-center space-x-1">
+                <div className="flex items-center">
                     <Menu
                         onClick={() => toggleMenu(!menuOpen)}
                         className="h-6 cursor-pointer flex sm:hidden"
                     />
 
-                    <div className="hidden sm:flex">{menuActions()}</div>
+                    <div className="hidden sm:flex sm:items-center sm:space-x-1">
+                        {menuActions()}
+                    </div>
                 </div>
 
                 <div
-                    className={`max-h-52 w-24 right-1 rounded-l z-20 space-y-2 flex flex-col sm:hidden sm:items-end absolute p-2 m-0 bg-slate-200 sm:rounded-l transition-all duration-400 justify-center items-center overflow-hidden ${
+                    className={`max-h-52 w-24 right-1 rounded-b z-20 space-y-2 flex flex-col sm:hidden sm:items-end absolute p-2 m-0 bg-slate-200 dark:bg-slate-800 transition-all duration-400 justify-center items-center overflow-hidden ${
                         menuOpen
                             ? "top-14 visible opacity-100"
                             : "-top-52 opacity-0 invisible"
