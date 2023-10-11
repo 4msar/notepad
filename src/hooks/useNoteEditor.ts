@@ -10,7 +10,7 @@ type UseNoteEditorProps = {
 };
 
 export const rootClassName = clsx(
-    "relative h-[calc(100vh-100px)] sm:h-[calc(100vh-15rem)] w-full text-slate-900 dark:text-white px-2 py-4 point-bg"
+    "relative max-h-[80vh] h-[calc(100vh-100px)] sm:h-[calc(100vh-15rem)] w-full text-slate-900 dark:text-white px-2 py-4 point-bg"
 );
 
 export function useNoteEditor(
