@@ -55,7 +55,6 @@ export function Navbar({
 }: NavbarProps) {
     const navigate = useNavigate();
     const { note = "" } = useParams();
-    const [isMobile, setIsMobile] = useState(window.innerWidth <= 425);
     const [menuOpen, toggleMenu] = useState(false);
     const showSnackbar = useSnackbar();
 
@@ -102,20 +101,15 @@ export function Navbar({
     useHotKeys(["ctrl", "o", "cmd", "o"], handleOpen);
 
     useEffect(() => {
-        const handleResize = () => {
-            setIsMobile(window.innerWidth <= 425);
-        };
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const menuHandler = (event: any) => {
             if (menuRef.current && !menuRef.current.contains(event.target)) {
                 toggleMenu(false);
             }
         };
-        window.addEventListener("resize", handleResize);
         document.addEventListener("click", menuHandler);
 
         return () => {
-            window.removeEventListener("resize", handleResize);
             document.removeEventListener("click", menuHandler);
         };
     }, []);
@@ -231,25 +225,23 @@ export function Navbar({
                     )}
                 </h1>
                 <div className="flex items-center space-x-1">
-                    {isMobile && (
-                        <Menu
-                            onClick={() => toggleMenu(!menuOpen)}
-                            className="h-6 cursor-pointer"
-                        />
-                    )}
-                    {!isMobile && menuActions()}
+                    <Menu
+                        onClick={() => toggleMenu(!menuOpen)}
+                        className="h-6 cursor-pointer flex sm:hidden"
+                    />
+
+                    <div className="hidden sm:flex">{menuActions()}</div>
                 </div>
-                {isMobile && (
-                    <div
-                        className={`max-h-52 w-24 right-1 rounded-l z-20 space-y-2 flex flex-col sm:items-end absolute p-2 m-0 bg-slate-200 sm:rounded-l transition-all duration-400 justify-center items-center overflow-hidden ${
-                            menuOpen
-                                ? "top-14 visible opacity-100"
-                                : "-top-52 opacity-0 invisible"
-                        }`}
-                    >
-                        {menuActions()}
-                    </div>
-                )}
+
+                <div
+                    className={`max-h-52 w-24 right-1 rounded-l z-20 space-y-2 flex flex-col sm:hidden sm:items-end absolute p-2 m-0 bg-slate-200 sm:rounded-l transition-all duration-400 justify-center items-center overflow-hidden ${
+                        menuOpen
+                            ? "top-14 visible opacity-100"
+                            : "-top-52 opacity-0 invisible"
+                    }`}
+                >
+                    {menuActions()}
+                </div>
             </div>
         </header>
     );

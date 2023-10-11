@@ -9,7 +9,7 @@
         --scrollbar-thumb-color: #888;
         --scrollbar-thumb-hover-color: #555;
 
-        @apply bg-slate-400 overflow-hidden;
+        @apply overflow-hidden;
     }
 
     html.dark {
