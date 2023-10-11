@@ -16,7 +16,7 @@ export function LastOpenNotePrompt() {
     if (!id) return null;
 
     return (
-        <div className="fixed bottom-0 right-0 left-0 max-w-[50vw] w-auto my-0 mx-auto bg-yellow-200 rounded-tr rounded-tl px-2 py-1 text-slate-900 font-semibold font-nunito flex justify-center items-center">
+        <div className="fixed bottom-0 right-0 left-0 max-w-full sm:max-w-[50vw] w-auto my-0 mx-auto bg-yellow-200 rounded-tr rounded-tl px-2 py-1 text-slate-900 font-semibold font-nunito flex justify-center items-center">
             <div className="hidden sm:block">
                 You have a last edited note, do you want to open it?
             </div>
