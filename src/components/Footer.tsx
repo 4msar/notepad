@@ -12,6 +12,14 @@ export const Footer = ({ hideMeta = false }: { hideMeta?: boolean }) => {
         return {
             wordCount: content?.split(" ").length ?? 0,
             charCount: content?.length ?? 0,
+            lastUpdate: new Date(note.editedAt).toLocaleString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+                hour: "numeric",
+                minute: "numeric",
+                hour12: true,
+            }),
         };
     }, [noteId]);
 
@@ -20,7 +28,8 @@ export const Footer = ({ hideMeta = false }: { hideMeta?: boolean }) => {
             {!hideMeta && (
                 <p className="text-gray-500 text-xs">
                     <span>Word: {metaData.wordCount}</span> |
-                    <span> Chars: {metaData.charCount}</span>
+                    <span> Chars: {metaData.charCount}</span> |
+                    <span> Last Update: {metaData.lastUpdate}</span>
                 </p>
             )}
             <p className="text-gray-500 text-xs">
@@ -37,7 +46,7 @@ export const Footer = ({ hideMeta = false }: { hideMeta?: boolean }) => {
 
             {hideMeta && (
                 <p className="text-gray-500 text-xs italic">
-                    {window.location.href.split("?")?.[0]}
+                    last update: {metaData.lastUpdate}
                 </p>
             )}
         </footer>
