@@ -10,7 +10,7 @@ type UseNoteEditorProps = {
 };
 
 export const rootClassName = clsx(
-    "relative max-h-[80vh] h-[calc(100vh-100px)] sm:h-[calc(100vh-15rem)] w-full text-slate-900 dark:text-white px-2 py-4 point-bg"
+    "relative max-h-[80vh] h-[calc(100vh-100px)] sm:h-[calc(100vh-15rem)] w-full text-slate-900 dark:text-white px-2 point-bg"
 );
 
 export function useNoteEditor(
@@ -34,7 +34,7 @@ export function useNoteEditor(
             onUpdate: debounce(handleChange, 100),
             editorProps: {
                 attributes: {
-                    class: "prose prose-sm dark:prose-invert prose-pre:max-w-2xl pr-2 editor-font font-normal text-xl text-slate-900 dark:text-white resize-none block border-none outline-none bg-transparent max-w-full w-full h-full overflow-hidden overflow-y-auto",
+                    class: "prose prose-sm dark:prose-invert prose-pre:max-w-2xl pr-2 py-4 editor-font font-normal text-xl text-slate-900 dark:text-white resize-none block border-none outline-none bg-transparent max-w-full w-full h-full overflow-hidden overflow-y-auto",
                 },
             },
         },
