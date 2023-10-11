@@ -24,7 +24,7 @@ export const Footer = ({ hideMeta = false }: { hideMeta?: boolean }) => {
     }, [noteId]);
 
     return (
-        <footer className="w-full h-auto flex-col sm:flex-row sm:h-6 bg-gray-100 dark:bg-slate-800 flex justify-between px-4 py-2 sm:py-0.5 items-center text-center rounded-br-md rounded-bl-md">
+        <footer className="w-full h-auto flex-col sm:flex-row sm:h-6 bg-gray-100 dark:bg-slate-800 flex justify-between px-4 py-2 sm:py-0.5 items-center text-center rounded-none sm:rounded-br-md sm:rounded-bl-md">
             {!hideMeta && (
                 <p className="text-gray-500 text-xs">
                     <span>Word: {metaData.wordCount}</span> |
