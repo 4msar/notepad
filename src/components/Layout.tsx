@@ -12,9 +12,9 @@ export function Layout({
     children: React.ReactNode;
 } & Partial<NavbarProps>) {
     return (
-        <div className="bg-white dark:bg-slate-700 font-nunito rounded-none sm:rounded-md m-0 sm:m-20 sm:mx-auto w-full sm:w-[80vw] h-full">
+        <div className="bg-white dark:bg-slate-700 font-nunito rounded-none sm:rounded-md m-0 sm:m-20 sm:mx-auto w-full sm:w-[80vw] h-full flex flex-col">
             <Navbar hideNavLinks={hideNavLinks} {...(props as NavbarProps)} />
-            <main className="relative mx-auto border-x-0 sm:border-x dark:border-slate-800 max-h-min">
+            <main className="flex-1 w-full relative mx-auto border-x-0 sm:border-x dark:border-slate-800 max-h-min">
                 {children}
             </main>
             <Footer hideMeta={hideMeta} />

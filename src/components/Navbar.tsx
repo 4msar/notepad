@@ -205,7 +205,7 @@ export function Navbar({
     return (
         <header
             ref={menuRef}
-            className="text-slate-900 dark:text-white bg-slate-400 dark:bg-slate-900 w-full h-14 shadow-sm flex items-center border-t-0 border-x-0 sm:border-x sm:border-t dark:border-slate-800 rounded-none sm:rounded-tr-md sm:rounded-tl-md"
+            className="text-slate-900 dark:text-white bg-slate-400 dark:bg-slate-900 sticky top-0 sm:relative z-40 w-full h-14 shadow-sm flex items-center border-t-0 border-x-0 sm:border-x sm:border-t dark:border-slate-800 rounded-none sm:rounded-tr-md sm:rounded-tl-md"
         >
             <div className="flex justify-between items-center px-4 w-full max-w-full mx-auto z-40">
                 <h1 className="text-4xl font-bold font-nunito m-0 flex items-center">
