@@ -60,4 +60,10 @@
         font-family: "Nunito", "Kalpurush", sans-serif;
         font-weight: 400;
     }
+
+    .tiptap p.is-editor-empty:first-child::before {
+        content: attr(data-placeholder);
+
+        @apply text-gray-400 dark:text-gray-500 float-left h-0 pointer-events-none;
+    }
 }

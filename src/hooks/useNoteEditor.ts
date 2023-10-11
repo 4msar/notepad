@@ -1,4 +1,5 @@
 import { Editor, useEditor } from "@tiptap/react";
+import Placeholder from "@tiptap/extension-placeholder";
 import StarterKit from "@tiptap/starter-kit";
 import { debounce, parseNote } from "../utils/functions";
 import clsx from "clsx";
@@ -27,7 +28,14 @@ export function useNoteEditor(
 
     const editor = useEditor(
         {
-            extensions: [StarterKit],
+            extensions: [
+                StarterKit,
+                Placeholder.configure({
+                    // Use a placeholder:
+                    placeholder: "Write something…",
+                    emptyNodeClass: "is-empty is-editor-empty not-prose",
+                }),
+            ],
             content: parseNote(text),
             autofocus: true,
             editable: !isReadOnly,
