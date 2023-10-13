@@ -103,6 +103,5 @@ declare global {
     }
 }
 
-if (import.meta.env.NODE_ENV !== "production") {
-    window.NoteService = new NoteService();
-}
+// enable it only while you in development mode for debug
+// window.NoteService = new NoteService();
