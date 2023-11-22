@@ -5,7 +5,7 @@ import { createLocalNoteId, getLocalData } from "../utils/helpers";
 import { INITIAL_NOTE } from "../utils/constant";
 import { database as db } from "../utils/firebase";
 import { generateNoteId, isEmpty } from "../utils/functions";
-import { useLocalStorage } from "./useLocalStorage";
+import { useLocalStorage } from "usehooks-ts";
 import { Note } from "src/utils/types";
 import { decryptData, encryptData } from "src/utils";
 
