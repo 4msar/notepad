@@ -34,6 +34,10 @@ export const createLocalNoteId = (id?: string) => {
     return `${LOCAL_NOTES}${key}__`;
 };
 
+export const getLocalKey = (id = "") => {
+    return id.startsWith(LOCAL_NOTES) ? id : createLocalNoteId(id);
+};
+
 export const getLocalData = <T = Note>(id = "") => {
     const key = id.startsWith(LOCAL_NOTES) ? id : createLocalNoteId(id);
     const data = localStorage.getItem(key) ?? "";

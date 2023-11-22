@@ -1,12 +1,12 @@
 import { useMemo } from "react";
 import { useParams } from "react-router-dom";
-import { getLocalData, stripTags } from "src/utils";
+import { getLocalKey, stripTags } from "src/utils";
+import { useLocalStorage } from "src/hooks";
 
 export const Footer = ({ hideMeta = false }: { hideMeta?: boolean }) => {
     const { note: noteId = "" } = useParams();
+    const [note] = useLocalStorage(getLocalKey(noteId));
     const metaData = useMemo(() => {
-        const note = getLocalData(noteId);
-
         const content = stripTags(note?.note);
 
         return {
@@ -21,7 +21,7 @@ export const Footer = ({ hideMeta = false }: { hideMeta?: boolean }) => {
                 hour12: true,
             }),
         };
-    }, [noteId]);
+    }, [noteId, note]);
 
     return (
         <footer className="w-full h-auto flex-col sm:flex-row sm:h-6 bg-gray-100 dark:bg-slate-800 flex justify-between px-4 py-2 sm:py-0.5 items-center text-center border-b-0 border-x-0 sm:border-b sm:border-x dark:border-slate-800 rounded-none sm:rounded-br-md sm:rounded-bl-md">
