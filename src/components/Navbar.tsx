@@ -131,6 +131,10 @@ export function Navbar({
     };
 
     const menuActions = () => {
+        if (note.length <= 0) {
+            return null;
+        }
+
         if (hideNavLinks) {
             return (
                 <ActionButton
@@ -185,7 +189,7 @@ export function Navbar({
                         <span className="pl-2 inline sm:hidden">Delete</span>
                     </ActionButton>
                 )}
-                {note && (
+                {note.length > 0 && (
                     <ActionButton
                         onClick={onShareClick}
                         id="share"

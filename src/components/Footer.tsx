@@ -1,11 +1,20 @@
 import { useMemo } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { getLocalKey, stripTags } from "src/utils";
 import { Note } from "src/utils/types";
 import { useReadLocalStorage } from "usehooks-ts";
 
-export const Footer = ({ hideMeta = false }: { hideMeta?: boolean }) => {
+export const Footer = ({
+    hideMeta = false,
+    showLastUpdate = false,
+    children,
+}: {
+    hideMeta?: boolean;
+    showLastUpdate?: boolean;
+    children?: React.ReactNode;
+}) => {
     const { note: noteId = "" } = useParams();
+
     const note = useReadLocalStorage<Note>(getLocalKey(noteId));
 
     const metaData = useMemo(() => {
@@ -45,20 +54,17 @@ export const Footer = ({ hideMeta = false }: { hideMeta?: boolean }) => {
             <p className="text-gray-500 text-xs">
                 &copy; {new Date().getFullYear()}
                 {" - "}
-                <a href="//msar.me" target="_blank">
-                    msar.me
-                </a>
+                <Link to="/">Noto</Link>
                 {" | "}
-                <a href="//msar.me/about" target="_blank">
-                    about
-                </a>
+                <Link to="/i/about">about</Link>
             </p>
 
-            {hideMeta && (
+            {showLastUpdate && (
                 <p className="text-gray-500 text-xs italic">
                     last update: {metaData.lastUpdate}
                 </p>
             )}
+            {children}
         </footer>
     );
 };
