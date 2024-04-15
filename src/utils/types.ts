@@ -4,4 +4,5 @@ export type Note = {
     encrypted: boolean;
     editedAt: number;
     syncAt?: number;
+    meta?: Record<string, unknown>;
 };
