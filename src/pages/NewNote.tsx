@@ -30,7 +30,7 @@ export default function NewNote() {
                     toast.success("Note saved! Link copied to clipboard");
                 })
                 .catch(() => {
-                    toast.success("Note saved!");
+                    toast.success("Note saved! (Clipboard copy failed)");
                 });
             
             navigate(`/n/${noteId}?token=${encodeURIComponent(token)}`, {
