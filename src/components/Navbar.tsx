@@ -1,9 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useHotKeys, useSnackbar } from "../hooks";
+import { useHotKeys } from "../hooks";
 import { getTheme, removeLocalNote, setTheme } from "../utils";
 import { decryptData } from "../utils/encryptions";
-import clsx from "clsx";
 import {
     generateNoteId,
     generateNoteIdWithToken,
@@ -11,7 +10,24 @@ import {
     isEmpty,
 } from "../utils/functions";
 import { Sun, Moon, Menu, Trash, AddNew, Open, Save, Share } from "./Icons";
-import { Tooltip } from "./Tooltip";
+import { Button } from "./ui/button";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "./ui/tooltip";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "./ui/dialog";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { toast } from "sonner";
 
 export type NavbarProps = {
     onSave: (evt: React.MouseEvent) => void;
@@ -33,17 +49,21 @@ const ActionButton = ({
     className?: string;
 }) => {
     return (
-        <Tooltip message={title} position="bottom">
-            <strong
-                id={id}
-                className={clsx(
-                    "text-slate-900 dark:text-white cursor-pointer border rounded text-xs p-1 transition-all duration-200 flex items-center w-20 sm:w-auto justify-between",
-                    className
-                )}
-                onClick={onClick}
-            >
-                {children}
-            </strong>
+        <Tooltip>
+            <TooltipTrigger asChild>
+                <Button
+                    id={id}
+                    variant="outline"
+                    size="sm"
+                    className={className}
+                    onClick={onClick}
+                >
+                    {children}
+                </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">
+                <p>{title}</p>
+            </TooltipContent>
         </Tooltip>
     );
 };
@@ -56,7 +76,8 @@ export function Navbar({
     const navigate = useNavigate();
     const { note = "" } = useParams();
     const [menuOpen, toggleMenu] = useState(false);
-    const showSnackbar = useSnackbar();
+    const [openDialogOpen, setOpenDialogOpen] = useState(false);
+    const [noteKey, setNoteKey] = useState("");
 
     const [appTheme, setAppTheme] = useState(getTheme() ?? "light");
     const menuRef = useRef<HTMLElement>(null);
@@ -71,11 +92,17 @@ export function Navbar({
     }, [encryptedToken]);
 
     const handleOpen = () => {
-        const id = prompt("Enter note key to open:", "note-") ?? "";
         toggleMenu(false);
-        if (!isEmpty(id)) {
-            const noteId = generateNoteId(id);
-            navigate(`/n/${noteId}${generateNoteIdWithToken(id)}`, {
+        setNoteKey("note-");
+        setOpenDialogOpen(true);
+    };
+
+    const handleOpenNote = () => {
+        if (!isEmpty(noteKey)) {
+            const noteId = generateNoteId(noteKey);
+            setOpenDialogOpen(false);
+            setNoteKey("");
+            navigate(`/n/${noteId}${generateNoteIdWithToken(noteKey)}`, {
                 state: {
                     noteId,
                 },
@@ -91,8 +118,13 @@ export function Navbar({
         const url = `${
             window.location.origin
         }/s/${noteId}?token=${encodeURIComponent(shareToken)}`;
-        navigator.clipboard.writeText(url);
-        showSnackbar("Link copied to clipboard");
+        navigator.clipboard.writeText(url)
+            .then(() => {
+                toast.success("Link copied to clipboard");
+            })
+            .catch(() => {
+                toast.error("Failed to copy link");
+            });
     };
 
     useHotKeys(["ctrl", "n", "cmd", "n"], () => {
@@ -207,48 +239,89 @@ export function Navbar({
     const isDarkMood = appTheme === "dark";
 
     return (
-        <header
-            ref={menuRef}
-            className="text-slate-900 dark:text-white bg-slate-400 dark:bg-slate-900 sticky top-0 sm:relative z-40 w-full h-14 shadow-sm flex items-center border-t-0 border-x-0 sm:border-x sm:border-t dark:border-slate-800 rounded-none sm:rounded-tr-md sm:rounded-tl-md"
-        >
-            <div className="flex justify-between items-center px-4 w-full max-w-full mx-auto z-40">
-                <h1 className="text-4xl font-bold font-nunito m-0 flex items-center">
-                    <Link title="Simple Note Taking Application..." to="/">
-                        Noto
-                    </Link>
-                    {isDarkMood ? (
-                        <Sun
-                            className="ml-4 cursor-pointer"
-                            onClick={() => switchTheme("light")}
+        <TooltipProvider>
+            <header
+                ref={menuRef}
+                className="text-slate-900 dark:text-white bg-slate-400 dark:bg-slate-900 sticky top-0 sm:relative z-40 w-full h-14 shadow-sm flex items-center border-t-0 border-x-0 sm:border-x sm:border-t dark:border-slate-800 rounded-none sm:rounded-tr-md sm:rounded-tl-md"
+            >
+                <div className="flex justify-between items-center px-4 w-full max-w-full mx-auto z-40">
+                    <h1 className="text-4xl font-bold font-nunito m-0 flex items-center">
+                        <Link title="Simple Note Taking Application..." to="/">
+                            Noto
+                        </Link>
+                        {isDarkMood ? (
+                            <Sun
+                                className="ml-4 cursor-pointer"
+                                onClick={() => switchTheme("light")}
+                            />
+                        ) : (
+                            <Moon
+                                className="ml-4 cursor-pointer"
+                                onClick={() => switchTheme("dark")}
+                            />
+                        )}
+                    </h1>
+                    <div className="flex items-center">
+                        <Menu
+                            onClick={() => toggleMenu(!menuOpen)}
+                            className="h-6 cursor-pointer flex sm:hidden"
                         />
-                    ) : (
-                        <Moon
-                            className="ml-4 cursor-pointer"
-                            onClick={() => switchTheme("dark")}
-                        />
-                    )}
-                </h1>
-                <div className="flex items-center">
-                    <Menu
-                        onClick={() => toggleMenu(!menuOpen)}
-                        className="h-6 cursor-pointer flex sm:hidden"
-                    />
 
-                    <div className="hidden sm:flex sm:items-center sm:space-x-1">
+                        <div className="hidden sm:flex sm:items-center sm:space-x-1">
+                            {menuActions()}
+                        </div>
+                    </div>
+
+                    <div
+                        className={`max-h-52 w-24 right-1 rounded-b z-20 space-y-2 flex flex-col sm:hidden sm:items-end absolute p-2 m-0 bg-slate-200 dark:bg-slate-800 transition-all duration-400 justify-center items-center overflow-hidden ${
+                            menuOpen
+                                ? "top-14 visible opacity-100"
+                                : "-top-52 opacity-0 invisible"
+                        }`}
+                    >
                         {menuActions()}
                     </div>
                 </div>
+            </header>
 
-                <div
-                    className={`max-h-52 w-24 right-1 rounded-b z-20 space-y-2 flex flex-col sm:hidden sm:items-end absolute p-2 m-0 bg-slate-200 dark:bg-slate-800 transition-all duration-400 justify-center items-center overflow-hidden ${
-                        menuOpen
-                            ? "top-14 visible opacity-100"
-                            : "-top-52 opacity-0 invisible"
-                    }`}
-                >
-                    {menuActions()}
-                </div>
-            </div>
-        </header>
+            <Dialog open={openDialogOpen} onOpenChange={setOpenDialogOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Open Note</DialogTitle>
+                        <DialogDescription>
+                            Enter the note key to open an existing note.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="noteKey" className="text-right">
+                                Note Key
+                            </Label>
+                            <Input
+                                id="noteKey"
+                                value={noteKey}
+                                onChange={(e) => setNoteKey(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        handleOpenNote();
+                                    }
+                                }}
+                                placeholder="note-"
+                                className="col-span-3"
+                                autoFocus
+                            />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button type="button" variant="outline" onClick={() => setOpenDialogOpen(false)}>
+                            Cancel
+                        </Button>
+                        <Button type="button" onClick={handleOpenNote}>
+                            Open Note
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+        </TooltipProvider>
     );
 }

@@ -1,7 +1,6 @@
 /**
  * https://stackoverflow.com/questions/18279141/javascript-string-encryption-and-decryption
  */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ENCRYPTION_KEY } from "./constant";
 
 import CryptoJS from "crypto-js";
