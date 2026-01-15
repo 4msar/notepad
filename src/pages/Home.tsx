@@ -8,11 +8,7 @@ export default function Home() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (
-            lastId &&
-            // eslint-disable-next-line no-restricted-globals
-            confirm("You have a last edited note,\nDo you want to open it?")
-        ) {
+        if (lastId && window.confirm("You have a last edited note,\nDo you want to open it?")) {
             navigate(`/n/${lastId}`);
         } else {
             navigate(`/new`);
