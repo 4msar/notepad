@@ -100,8 +100,13 @@ export function Navbar({
         const url = `${
             window.location.origin
         }/s/${noteId}?token=${encodeURIComponent(shareToken)}`;
-        navigator.clipboard.writeText(url);
-        toast.success("Link copied to clipboard");
+        navigator.clipboard.writeText(url)
+            .then(() => {
+                toast.success("Link copied to clipboard");
+            })
+            .catch(() => {
+                toast.error("Failed to copy link");
+            });
     };
 
     useHotKeys(["ctrl", "n", "cmd", "n"], () => {

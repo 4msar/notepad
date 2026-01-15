@@ -25,8 +25,13 @@ export default function NewNote() {
             url.searchParams.set("token", token);
             
             // Copy URL to clipboard
-            navigator.clipboard.writeText(url.toString());
-            toast.success("Note saved! Link copied to clipboard");
+            navigator.clipboard.writeText(url.toString())
+                .then(() => {
+                    toast.success("Note saved! Link copied to clipboard");
+                })
+                .catch(() => {
+                    toast.success("Note saved!");
+                });
             
             navigate(`/n/${noteId}?token=${encodeURIComponent(token)}`, {
                 replace: true,
