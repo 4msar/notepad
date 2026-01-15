@@ -17,6 +17,16 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "./ui/tooltip";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "./ui/dialog";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
 import { toast } from "sonner";
 
 export type NavbarProps = {
@@ -66,6 +76,8 @@ export function Navbar({
     const navigate = useNavigate();
     const { note = "" } = useParams();
     const [menuOpen, toggleMenu] = useState(false);
+    const [openDialogOpen, setOpenDialogOpen] = useState(false);
+    const [noteKey, setNoteKey] = useState("");
 
     const [appTheme, setAppTheme] = useState(getTheme() ?? "light");
     const menuRef = useRef<HTMLElement>(null);
@@ -80,11 +92,17 @@ export function Navbar({
     }, [encryptedToken]);
 
     const handleOpen = () => {
-        const id = prompt("Enter note key to open:", "note-") ?? "";
         toggleMenu(false);
-        if (!isEmpty(id)) {
-            const noteId = generateNoteId(id);
-            navigate(`/n/${noteId}${generateNoteIdWithToken(id)}`, {
+        setNoteKey("note-");
+        setOpenDialogOpen(true);
+    };
+
+    const handleOpenNote = () => {
+        if (!isEmpty(noteKey)) {
+            const noteId = generateNoteId(noteKey);
+            setOpenDialogOpen(false);
+            setNoteKey("");
+            navigate(`/n/${noteId}${generateNoteIdWithToken(noteKey)}`, {
                 state: {
                     noteId,
                 },
@@ -265,6 +283,45 @@ export function Navbar({
                     </div>
                 </div>
             </header>
+
+            <Dialog open={openDialogOpen} onOpenChange={setOpenDialogOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Open Note</DialogTitle>
+                        <DialogDescription>
+                            Enter the note key to open an existing note.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="noteKey" className="text-right">
+                                Note Key
+                            </Label>
+                            <Input
+                                id="noteKey"
+                                value={noteKey}
+                                onChange={(e) => setNoteKey(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        handleOpenNote();
+                                    }
+                                }}
+                                placeholder="note-"
+                                className="col-span-3"
+                                autoFocus
+                            />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button type="button" variant="outline" onClick={() => setOpenDialogOpen(false)}>
+                            Cancel
+                        </Button>
+                        <Button type="button" onClick={handleOpenNote}>
+                            Open Note
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </TooltipProvider>
     );
 }
