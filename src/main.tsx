@@ -1,18 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { SnackbarProvider } from "notistack";
 import App from "./App.tsx";
 import "./index.css";
+import { Toaster } from "./components/ui/sonner";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
-        <SnackbarProvider
-            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-            autoHideDuration={5000}
-            preventDuplicate
-            maxSnack={3}
-        >
-            <App />
-        </SnackbarProvider>
+        <App />
+        <Toaster />
     </React.StrictMode>
 );

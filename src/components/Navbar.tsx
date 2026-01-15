@@ -1,9 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useHotKeys, useSnackbar } from "../hooks";
+import { useHotKeys } from "../hooks";
 import { getTheme, removeLocalNote, setTheme } from "../utils";
 import { decryptData } from "../utils/encryptions";
-import clsx from "clsx";
 import {
     generateNoteId,
     generateNoteIdWithToken,
@@ -11,7 +10,14 @@ import {
     isEmpty,
 } from "../utils/functions";
 import { Sun, Moon, Menu, Trash, AddNew, Open, Save, Share } from "./Icons";
-import { Tooltip } from "./Tooltip";
+import { Button } from "./ui/button";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "./ui/tooltip";
+import { toast } from "sonner";
 
 export type NavbarProps = {
     onSave: (evt: React.MouseEvent) => void;
@@ -33,17 +39,21 @@ const ActionButton = ({
     className?: string;
 }) => {
     return (
-        <Tooltip message={title} position="bottom">
-            <strong
-                id={id}
-                className={clsx(
-                    "text-slate-900 dark:text-white cursor-pointer border rounded text-xs p-1 transition-all duration-200 flex items-center w-20 sm:w-auto justify-between",
-                    className
-                )}
-                onClick={onClick}
-            >
-                {children}
-            </strong>
+        <Tooltip>
+            <TooltipTrigger asChild>
+                <Button
+                    id={id}
+                    variant="outline"
+                    size="sm"
+                    className={className}
+                    onClick={onClick}
+                >
+                    {children}
+                </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">
+                <p>{title}</p>
+            </TooltipContent>
         </Tooltip>
     );
 };
@@ -56,7 +66,6 @@ export function Navbar({
     const navigate = useNavigate();
     const { note = "" } = useParams();
     const [menuOpen, toggleMenu] = useState(false);
-    const showSnackbar = useSnackbar();
 
     const [appTheme, setAppTheme] = useState(getTheme() ?? "light");
     const menuRef = useRef<HTMLElement>(null);
@@ -92,7 +101,7 @@ export function Navbar({
             window.location.origin
         }/s/${noteId}?token=${encodeURIComponent(shareToken)}`;
         navigator.clipboard.writeText(url);
-        showSnackbar("Link copied to clipboard");
+        toast.success("Link copied to clipboard");
     };
 
     useHotKeys(["ctrl", "n", "cmd", "n"], () => {
@@ -207,48 +216,50 @@ export function Navbar({
     const isDarkMood = appTheme === "dark";
 
     return (
-        <header
-            ref={menuRef}
-            className="text-slate-900 dark:text-white bg-slate-400 dark:bg-slate-900 sticky top-0 sm:relative z-40 w-full h-14 shadow-sm flex items-center border-t-0 border-x-0 sm:border-x sm:border-t dark:border-slate-800 rounded-none sm:rounded-tr-md sm:rounded-tl-md"
-        >
-            <div className="flex justify-between items-center px-4 w-full max-w-full mx-auto z-40">
-                <h1 className="text-4xl font-bold font-nunito m-0 flex items-center">
-                    <Link title="Simple Note Taking Application..." to="/">
-                        Noto
-                    </Link>
-                    {isDarkMood ? (
-                        <Sun
-                            className="ml-4 cursor-pointer"
-                            onClick={() => switchTheme("light")}
+        <TooltipProvider>
+            <header
+                ref={menuRef}
+                className="text-slate-900 dark:text-white bg-slate-400 dark:bg-slate-900 sticky top-0 sm:relative z-40 w-full h-14 shadow-sm flex items-center border-t-0 border-x-0 sm:border-x sm:border-t dark:border-slate-800 rounded-none sm:rounded-tr-md sm:rounded-tl-md"
+            >
+                <div className="flex justify-between items-center px-4 w-full max-w-full mx-auto z-40">
+                    <h1 className="text-4xl font-bold font-nunito m-0 flex items-center">
+                        <Link title="Simple Note Taking Application..." to="/">
+                            Noto
+                        </Link>
+                        {isDarkMood ? (
+                            <Sun
+                                className="ml-4 cursor-pointer"
+                                onClick={() => switchTheme("light")}
+                            />
+                        ) : (
+                            <Moon
+                                className="ml-4 cursor-pointer"
+                                onClick={() => switchTheme("dark")}
+                            />
+                        )}
+                    </h1>
+                    <div className="flex items-center">
+                        <Menu
+                            onClick={() => toggleMenu(!menuOpen)}
+                            className="h-6 cursor-pointer flex sm:hidden"
                         />
-                    ) : (
-                        <Moon
-                            className="ml-4 cursor-pointer"
-                            onClick={() => switchTheme("dark")}
-                        />
-                    )}
-                </h1>
-                <div className="flex items-center">
-                    <Menu
-                        onClick={() => toggleMenu(!menuOpen)}
-                        className="h-6 cursor-pointer flex sm:hidden"
-                    />
 
-                    <div className="hidden sm:flex sm:items-center sm:space-x-1">
+                        <div className="hidden sm:flex sm:items-center sm:space-x-1">
+                            {menuActions()}
+                        </div>
+                    </div>
+
+                    <div
+                        className={`max-h-52 w-24 right-1 rounded-b z-20 space-y-2 flex flex-col sm:hidden sm:items-end absolute p-2 m-0 bg-slate-200 dark:bg-slate-800 transition-all duration-400 justify-center items-center overflow-hidden ${
+                            menuOpen
+                                ? "top-14 visible opacity-100"
+                                : "-top-52 opacity-0 invisible"
+                        }`}
+                    >
                         {menuActions()}
                     </div>
                 </div>
-
-                <div
-                    className={`max-h-52 w-24 right-1 rounded-b z-20 space-y-2 flex flex-col sm:hidden sm:items-end absolute p-2 m-0 bg-slate-200 dark:bg-slate-800 transition-all duration-400 justify-center items-center overflow-hidden ${
-                        menuOpen
-                            ? "top-14 visible opacity-100"
-                            : "-top-52 opacity-0 invisible"
-                    }`}
-                >
-                    {menuActions()}
-                </div>
-            </div>
-        </header>
+            </header>
+        </TooltipProvider>
     );
 }
