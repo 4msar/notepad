@@ -10,8 +10,14 @@ export const setLastOpenId = (id: string) => {
     return localStorage.setItem(LAST_NOTE_ID, id);
 };
 
+/** Stored choice wins; first visit follows the OS color scheme. */
 export const getTheme = () => {
-    return localStorage.getItem(APP_THEME) ?? "light";
+    const stored = localStorage.getItem(APP_THEME);
+    if (stored) return stored;
+    const prefersDark = window.matchMedia?.(
+        "(prefers-color-scheme: dark)"
+    ).matches;
+    return prefersDark ? "dark" : "light";
 };
 
 export const setTheme = (name: string) => {

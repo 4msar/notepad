@@ -1,5 +1,5 @@
 import { EditorContent } from "@tiptap/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import NoteService from "../services/NoteService";
@@ -17,7 +17,14 @@ import {
     removeLastOpenId,
     setLastOpenId,
 } from "src/utils";
-import { Layout, UnSaveNotice } from "src/components";
+import {
+    EditorToolbar,
+    Layout,
+    Modal,
+    UnSaveNotice,
+    dangerButtonClass,
+    secondaryButtonClass,
+} from "src/components";
 
 export default function NotePage() {
     const { note: noteId = "" } = useParams();
@@ -31,6 +38,7 @@ export default function NotePage() {
     } = useNote(noteId);
     const navigate = useNavigate();
     const showSnackbar = useSnackbar();
+    const [confirmDelete, setConfirmDelete] = useState(false);
 
     const urlParams = new URLSearchParams(window.location.search);
     const encryptedToken = urlParams.get("token");
@@ -62,7 +70,7 @@ export default function NotePage() {
 
     const onSave = () => {
         saveToOnline(noteId);
-        showSnackbar("Note sync successfully!", { variant: "success" });
+        showSnackbar("Note synced", { variant: "success" });
     };
 
     const onDelete = () => {
@@ -73,21 +81,21 @@ export default function NotePage() {
             showSnackbar("You can't delete without permission.", {
                 variant: "warning",
             });
-            return null;
+            return;
         }
-         
-        const confirmed = confirm("Are you sure?");
-        if (confirmed) {
-            NoteService.delete(noteId);
-            saveNote({});
-            removeLastOpenId();
-            showSnackbar("Note deleted successfully!", { variant: "warning" });
-            navigate(`/new`);
-        }
+        setConfirmDelete(true);
+    };
+
+    const performDelete = () => {
+        setConfirmDelete(false);
+        NoteService.delete(noteId);
+        saveNote({});
+        removeLastOpenId();
+        showSnackbar("Note deleted", { variant: "warning" });
+        navigate(`/new`);
     };
 
     useHotKeys(["ctrl", "cmd", "s"], () => {
-        console.log("Saved by Keyboard Shortcut.");
         onSave();
     });
 
@@ -96,9 +104,49 @@ export default function NotePage() {
     }, [noteId]);
 
     return (
-        <Layout onSave={onSave} onDelete={onDelete}>
+        <Layout
+            onSave={onSave}
+            onDelete={onDelete}
+            footerProps={{
+                status: isReadOnly
+                    ? { text: "Read only", tone: "warn" }
+                    : isSaved
+                    ? { text: "All changes synced", tone: "ok" }
+                    : { text: "Unsynced changes. Press Save.", tone: "warn" },
+            }}
+        >
+            {!isReadOnly && <EditorToolbar editor={editor} />}
             <EditorContent className={rootClassName} editor={editor} />
             {!isSaved && <UnSaveNotice onReset={resetWithOnline} />}
+
+            <Modal
+                open={confirmDelete}
+                onClose={() => setConfirmDelete(false)}
+                title="Delete this note?"
+                footer={
+                    <>
+                        <button
+                            type="button"
+                            className={secondaryButtonClass}
+                            onClick={() => setConfirmDelete(false)}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="button"
+                            className={dangerButtonClass}
+                            onClick={performDelete}
+                        >
+                            Delete
+                        </button>
+                    </>
+                }
+            >
+                <p className="text-sm text-slate-600 dark:text-slate-300">
+                    The note will be removed for everyone who has the link. This
+                    cannot be undone.
+                </p>
+            </Modal>
         </Layout>
     );
 }

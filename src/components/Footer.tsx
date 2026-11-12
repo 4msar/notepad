@@ -4,13 +4,17 @@ import { getLocalKey, stripTags } from "src/utils";
 import { Note } from "src/utils/types";
 import { useReadLocalStorage } from "usehooks-ts";
 
+export type SaveStatus = { text: string; tone: "ok" | "warn" };
+
 export const Footer = ({
     hideMeta = false,
     showLastUpdate = false,
+    status,
     children,
 }: {
     hideMeta?: boolean;
     showLastUpdate?: boolean;
+    status?: SaveStatus;
     children?: React.ReactNode;
 }) => {
     const { note: noteId = "" } = useParams();
@@ -26,11 +30,11 @@ export const Footer = ({
             };
         }
 
-        const content = stripTags(note?.note);
+        const content = stripTags(note?.note).trim();
 
         return {
-            wordCount: content?.split(" ").length ?? 0,
-            charCount: content?.length ?? 0,
+            wordCount: content ? content.split(/\s+/).length : 0,
+            charCount: content.length,
             lastUpdate: new Date(note.editedAt).toLocaleString("en-US", {
                 year: "numeric",
                 month: "short",
@@ -43,27 +47,43 @@ export const Footer = ({
     }, [note]);
 
     return (
-        <footer className="w-full h-auto flex-col sm:flex-row sm:h-6 bg-gray-100 dark:bg-slate-800 flex justify-between px-4 py-2 sm:py-0.5 items-center text-center border-b-0 border-x-0 sm:border-b sm:border-x dark:border-slate-800 rounded-none sm:rounded-br-md sm:rounded-bl-md">
-            {!hideMeta && (
-                <p className="text-gray-500 text-xs">
-                    <span>Word: {metaData.wordCount}</span> |
-                    <span> Chars: {metaData.charCount}</span> |
-                    <span> Last update: {metaData.lastUpdate}</span>
-                </p>
-            )}
-            <p className="text-gray-500 text-xs">
-                &copy; {new Date().getFullYear()}
-                {" - "}
-                <Link to="/">Noto</Link>
-                {" | "}
-                <Link to="/i/about">about</Link>
+        <footer className="flex h-auto w-full flex-col items-center justify-between gap-1 border-x-0 border-b-0 bg-slate-50 px-4 py-2 text-center text-xs text-slate-500 sm:h-8 sm:flex-row sm:py-0 sm:border-x sm:border-b dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400 rounded-none sm:rounded-b-xl">
+            <div className="flex flex-wrap items-center gap-x-3">
+                {!hideMeta && (
+                    <span>
+                        {metaData.wordCount} words · {metaData.charCount}{" "}
+                        chars
+                        {metaData.lastUpdate &&
+                            ` · edited ${metaData.lastUpdate}`}
+                    </span>
+                )}
+                {status && (
+                    <span
+                        className={
+                            status.tone === "ok"
+                                ? "font-medium text-emerald-600 dark:text-emerald-400"
+                                : "font-medium text-amber-600 dark:text-amber-400"
+                        }
+                    >
+                        ● {status.text}
+                    </span>
+                )}
+                {showLastUpdate && (
+                    <span className="italic">
+                        last update: {metaData.lastUpdate}
+                    </span>
+                )}
+            </div>
+            <p>
+                &copy; {new Date().getFullYear()} ·{" "}
+                <Link className="hover:underline" to="/">
+                    Noto
+                </Link>{" "}
+                ·{" "}
+                <Link className="hover:underline" to="/i/about">
+                    about
+                </Link>
             </p>
-
-            {showLastUpdate && (
-                <p className="text-gray-500 text-xs italic">
-                    last update: {metaData.lastUpdate}
-                </p>
-            )}
             {children}
         </footer>
     );

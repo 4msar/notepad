@@ -4,6 +4,7 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { Layout } from "src/components";
 import { useNote } from "src/hooks";
 import { checkShareTokenIsValid } from "src/utils";
+import { sanitizeHtml } from "src/utils/sanitize";
 
 function ShareNote() {
     const { note: noteId = "" } = useParams();
@@ -34,7 +35,7 @@ function ShareNote() {
                 {isValidNoteForShare ? (
                     <article
                         dangerouslySetInnerHTML={{
-                            __html: onlineNote?.note ?? "",
+                            __html: sanitizeHtml(onlineNote?.note ?? ""),
                         }}
                     />
                 ) : (

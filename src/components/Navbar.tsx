@@ -12,6 +12,11 @@ import {
 } from "../utils/functions";
 import { Sun, Moon, Menu, Trash, AddNew, Open, Save, Share } from "./Icons";
 import { Tooltip } from "./Tooltip";
+import {
+    Modal,
+    primaryButtonClass,
+    secondaryButtonClass,
+} from "./Modal";
 
 export type NavbarProps = {
     onSave: (evt: React.MouseEvent) => void;
@@ -34,16 +39,17 @@ const ActionButton = ({
 }) => {
     return (
         <Tooltip message={title} position="bottom">
-            <strong
+            <button
                 id={id}
+                type="button"
+                onClick={onClick}
                 className={clsx(
-                    "text-slate-900 dark:text-white cursor-pointer border rounded text-xs p-1 transition-all duration-200 flex items-center w-20 sm:w-auto justify-between",
+                    "flex cursor-pointer items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-200 dark:text-slate-200 dark:hover:bg-slate-700",
                     className
                 )}
-                onClick={onClick}
             >
                 {children}
-            </strong>
+            </button>
         </Tooltip>
     );
 };
@@ -56,6 +62,8 @@ export function Navbar({
     const navigate = useNavigate();
     const { note = "" } = useParams();
     const [menuOpen, toggleMenu] = useState(false);
+    const [openDialog, setOpenDialog] = useState(false);
+    const [openKey, setOpenKey] = useState("note-");
     const showSnackbar = useSnackbar();
 
     const [appTheme, setAppTheme] = useState(getTheme() ?? "light");
@@ -70,18 +78,19 @@ export function Navbar({
             : null;
     }, [encryptedToken]);
 
+    const openNote = (key: string) => {
+        if (isEmpty(key)) return;
+        const noteId = generateNoteId(key);
+        navigate(`/n/${noteId}${generateNoteIdWithToken(key)}`, {
+            state: { noteId },
+            replace: false,
+        });
+    };
+
     const handleOpen = () => {
-        const id = prompt("Enter note key to open:", "note-") ?? "";
         toggleMenu(false);
-        if (!isEmpty(id)) {
-            const noteId = generateNoteId(id);
-            navigate(`/n/${noteId}${generateNoteIdWithToken(id)}`, {
-                state: {
-                    noteId,
-                },
-                replace: false,
-            });
-        }
+        setOpenKey("note-");
+        setOpenDialog(true);
     };
 
     const onShareClick = () => {
@@ -92,7 +101,7 @@ export function Navbar({
             window.location.origin
         }/s/${noteId}?token=${encodeURIComponent(shareToken)}`;
         navigator.clipboard.writeText(url);
-        showSnackbar("Link copied to clipboard");
+        showSnackbar("Share link copied to clipboard");
     };
 
     useHotKeys(["ctrl", "n", "cmd", "n"], () => {
@@ -140,64 +149,44 @@ export function Navbar({
                 <ActionButton
                     onClick={onShareClick}
                     id="share"
-                    title="Copy Share Link"
-                    className="dark:border-indigo-400 text-slate-800 hover:text-indigo-400"
+                    title="Copy share link"
                 >
-                    <Share />{" "}
-                    <span className="pl-2 inline sm:hidden">Share</span>
+                    <Share />
+                    <span className="inline sm:hidden">Share</span>
                 </ActionButton>
             );
         }
         return (
             <>
-                <ActionButton
-                    className="dark:border-blue-400 text-slate-800 hover:text-blue-400"
-                    onClick={onNewClick}
-                    id="new"
-                    title="Create New"
-                >
-                    <AddNew />{" "}
-                    <span className="pl-2 inline sm:hidden">New</span>
+                <ActionButton onClick={onNewClick} id="new" title="New note">
+                    <AddNew />
+                    <span className="inline sm:hidden">New</span>
                 </ActionButton>
-                <ActionButton
-                    onClick={handleOpen}
-                    id="open"
-                    title="Open a note"
-                    className="dark:border-yellow-400 text-slate-800 hover:text-yellow-400"
-                >
-                    <Open /> <span className="pl-2 inline sm:hidden">Open</span>
+                <ActionButton onClick={handleOpen} id="open" title="Open a note">
+                    <Open />
+                    <span className="inline sm:hidden">Open</span>
                 </ActionButton>
                 {!isReadOnly && (
-                    <ActionButton
-                        onClick={onSave}
-                        id="save"
-                        title="Save the Note"
-                        className="dark:border-green-400 text-slate-800 hover:text-green-400"
-                    >
-                        <Save />{" "}
-                        <span className="pl-2 inline sm:hidden">Save</span>
+                    <ActionButton onClick={onSave} id="save" title="Save the note">
+                        <Save />
+                        <span className="inline sm:hidden">Save</span>
                     </ActionButton>
                 )}
                 {note && !isReadOnly && note === decryptedToken && (
                     <ActionButton
                         onClick={onDelete}
                         id="delete"
-                        title="Delete the Note"
-                        className="dark:border-red-400 text-slate-800 hover:text-red-400"
+                        title="Delete the note"
+                        className="hover:text-red-600 dark:hover:text-red-400"
                     >
-                        <Trash />{" "}
-                        <span className="pl-2 inline sm:hidden">Delete</span>
+                        <Trash />
+                        <span className="inline sm:hidden">Delete</span>
                     </ActionButton>
                 )}
                 {note.length > 0 && (
-                    <ActionButton
-                        onClick={onShareClick}
-                        id="share"
-                        title="Share the note"
-                        className="dark:border-indigo-400 text-slate-800 hover:text-indigo-400"
-                    >
-                        <Share />{" "}
-                        <span className="pl-2 inline sm:hidden">Share</span>
+                    <ActionButton onClick={onShareClick} id="share" title="Share the note">
+                        <Share />
+                        <span className="inline sm:hidden">Share</span>
                     </ActionButton>
                 )}
             </>
@@ -209,46 +198,95 @@ export function Navbar({
     return (
         <header
             ref={menuRef}
-            className="text-slate-900 dark:text-white bg-slate-400 dark:bg-slate-900 sticky top-0 sm:relative z-40 w-full h-14 shadow-xs flex items-center border-t-0 border-x-0 sm:border-x sm:border-t dark:border-slate-800 rounded-none sm:rounded-tr-md sm:rounded-tl-md"
+            className="sticky top-0 z-40 flex h-14 w-full items-center border-x-0 border-t-0 bg-slate-100 text-slate-900 sm:relative sm:border-x sm:border-t dark:border-slate-800 dark:bg-slate-900 dark:text-white rounded-none sm:rounded-t-xl"
         >
-            <div className="flex justify-between items-center px-4 w-full max-w-full mx-auto z-40">
-                <h1 className="text-4xl font-bold font-nunito m-0 flex items-center">
-                    <Link title="Simple Note Taking Application..." to="/">
+            <div className="z-40 mx-auto flex w-full max-w-full items-center justify-between px-4">
+                <h1 className="m-0 flex items-center gap-3 text-2xl font-bold">
+                    <Link title="Simple note taking application" to="/">
                         Noto
                     </Link>
-                    {isDarkMood ? (
-                        <Sun
-                            className="ml-4 cursor-pointer"
-                            onClick={() => switchTheme("light")}
-                        />
-                    ) : (
-                        <Moon
-                            className="ml-4 cursor-pointer"
-                            onClick={() => switchTheme("dark")}
-                        />
-                    )}
+                    <Tooltip
+                        message={isDarkMood ? "Light mode" : "Dark mode"}
+                        position="bottom"
+                    >
+                        <button
+                            type="button"
+                            aria-label="Toggle theme"
+                            onClick={() => switchTheme(isDarkMood ? "light" : "dark")}
+                            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-slate-600 hover:bg-slate-200 dark:text-slate-300 dark:hover:bg-slate-700"
+                        >
+                            {isDarkMood ? <Sun /> : <Moon />}
+                        </button>
+                    </Tooltip>
                 </h1>
                 <div className="flex items-center">
-                    <Menu
+                    <button
+                        type="button"
+                        aria-label="Menu"
                         onClick={() => toggleMenu(!menuOpen)}
-                        className="h-6 cursor-pointer flex sm:hidden"
-                    />
+                        className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-md sm:hidden"
+                    >
+                        <Menu className="h-5" />
+                    </button>
 
-                    <div className="hidden sm:flex sm:items-center sm:space-x-1">
+                    <div className="hidden sm:flex sm:items-center sm:gap-1">
                         {menuActions()}
                     </div>
                 </div>
 
                 <div
-                    className={`max-h-52 w-24 right-1 rounded-b z-20 space-y-2 flex flex-col sm:hidden sm:items-end absolute p-2 m-0 bg-slate-200 dark:bg-slate-800 transition-all duration-400 justify-center items-center overflow-hidden ${
+                    className={`absolute right-2 top-14 z-20 flex w-40 flex-col gap-1 rounded-lg bg-white p-2 shadow-lg transition-all duration-300 dark:bg-slate-800 sm:hidden ${
                         menuOpen
-                            ? "top-14 visible opacity-100"
-                            : "-top-52 opacity-0 invisible"
+                            ? "visible translate-y-0 opacity-100"
+                            : "invisible -translate-y-2 opacity-0"
                     }`}
                 >
                     {menuActions()}
                 </div>
             </div>
+
+            <Modal
+                open={openDialog}
+                onClose={() => setOpenDialog(false)}
+                title="Open a note"
+                footer={
+                    <>
+                        <button
+                            type="button"
+                            className={secondaryButtonClass}
+                            onClick={() => setOpenDialog(false)}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="button"
+                            className={primaryButtonClass}
+                            onClick={() => {
+                                setOpenDialog(false);
+                                openNote(openKey);
+                            }}
+                        >
+                            Open
+                        </button>
+                    </>
+                }
+            >
+                <label className="block text-sm text-slate-600 dark:text-slate-300">
+                    Note key
+                    <input
+                        autoFocus
+                        value={openKey}
+                        onChange={(e) => setOpenKey(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                setOpenDialog(false);
+                                openNote(openKey);
+                            }
+                        }}
+                        className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:border-slate-500 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
+                    />
+                </label>
+            </Modal>
         </header>
     );
 }
