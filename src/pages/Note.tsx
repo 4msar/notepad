@@ -75,7 +75,7 @@ export default function NotePage() {
             });
             return null;
         }
-        // eslint-disable-next-line no-restricted-globals
+         
         const confirmed = confirm("Are you sure?");
         if (confirmed) {
             NoteService.delete(noteId);

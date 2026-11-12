@@ -10,7 +10,7 @@ export default function Home() {
     useEffect(() => {
         if (
             lastId &&
-            // eslint-disable-next-line no-restricted-globals
+             
             confirm("You have a last edited note,\nDo you want to open it?")
         ) {
             navigate(`/n/${lastId}`);

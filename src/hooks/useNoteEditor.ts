@@ -29,7 +29,11 @@ export function useNoteEditor(
     const editor = useEditor(
         {
             extensions: [
-                StarterKit,
+                StarterKit.configure({
+                    // v3 StarterKit adds Link and Underline by default; v2 did not. Keep v2 behavior.
+                    link: false,
+                    underline: false,
+                }),
                 Placeholder.configure({
                     // Use a placeholder:
                     placeholder: "Write something…",
@@ -42,7 +46,7 @@ export function useNoteEditor(
             onUpdate: debounce(handleChange, 100),
             editorProps: {
                 attributes: {
-                    class: "prose prose-sm dark:prose-invert prose-pre:max-w-2xl pr-2 py-4 editor-font font-normal text-xl text-slate-900 dark:text-white resize-none block border-none outline-none bg-transparent max-w-full w-full h-full overflow-hidden overflow-y-auto",
+                    class: "prose prose-sm dark:prose-invert prose-pre:max-w-2xl pr-2 py-4 editor-font font-normal text-xl text-slate-900 dark:text-white resize-none block border-none outline-hidden bg-transparent max-w-full w-full h-full overflow-hidden overflow-y-auto",
                 },
             },
         },

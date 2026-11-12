@@ -190,7 +190,7 @@ export function passwordStrengthValidator(value: string) {
  * @return {[type]}            [description]
  */
 export function debounce(callback: (...props: any) => void, wait: number) {
-    let timerId: NodeJS.Timeout;
+    let timerId: ReturnType<typeof setTimeout>;
     return (...args: any) => {
         clearTimeout(timerId);
         timerId = setTimeout(() => {
@@ -380,7 +380,7 @@ export function generateNoteIdWithToken(id = "") {
 export function isJsonString(str: string) {
     try {
         JSON.parse(str);
-    } catch (e) {
+    } catch {
         return false;
     }
     return true;
